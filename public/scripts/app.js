@@ -6,14 +6,12 @@ var headers = new Headers()
 /*
     Mosta la pagina principale
 */
-function showHome()
+function showHome(item)
 {
     console.log('showHome')
-    document.getElementById('pageOrders').style.display='none';
-    document.getElementById('pagePay').style.display='none';
-    document.getElementById('pagePaid').style.display='none';
-
-    document.getElementById('orderNo').value='';
+    document.getElementById('pageContatti').style.display='none';
+    document.getElementById('pageHome').style.display='block';
+    getMenuItems(item)
 }
 
 
@@ -27,75 +25,6 @@ function showContatti()
     document.getElementById('pageHome').style.display='none';
 }
 
-/*
-    Premuto bottone di ricerca ordine
-*/
-function pressSearchOrder()
-{
-    // Controllo che non sia vuoto
-    var orderNo = document.getElementById('orderNo').value
-    if (orderNo==""){
-        alert("Numero non valido")
-        return
-    }
-
-    document.querySelector("#waitOrderDivError").style.display='none'
-
-    // Simulo ritardo con un tempo ..
-    /* setTimeout(
-        function(){
-            console.log(orderNo)
-            document.getElementById('ordersOrderNo').textContent = orderNo;
-            showOrders();
-        }, 3000
-    ) */
-
-    /*
-	 * https://www.e-coop.it/virtualShop/rest/totem/getOrder?
-	 * codOrder=336151&
-     * numPitch=-1&idTotem=999&shopId=2602
-	 */
-    var url = getServer() + "getOrder?codOrder="+orderNo+
-        "&numPitch=-1"+
-        "&idTotem="+settings.totemId+
-        "&shopId="+settings.shopId
-
-    var divErr = document.querySelector("#waitOrderDivError")
-
-    console.log("[order] Fetch URL: "+url)
-    /*   headers.forEach( (x, y) => {
-        console.log("# "+x+" - "+y)
-    }) */
-   	return fetch(url, { headers: headers })
-       	.then( (response) => {
-		 	console.log("Fetch .then > "+ typeof response)
-			console.log(response)
-            
-            if (response.ok==false){
-                divErr.textContent = "Errore: "+response.status + " - " +response.statusText
-                divErr.style.display = 'block'
-            }
-            else {
-				var j = response.json().then( (body) => {
-					console.log("json .then >")
-					console.log(body)
-					var result = body[0]
-				})
-				.catch( (err) => {
-					console.log("json .catch "+err)
-                    divErr.textContent = "Err JSON: "+err
-                    divErr.style.display = 'block'
-                })
-            }
-        })
-      	.catch( (err) => {
-			console.error("fetch .catch")
-			console.log(err)
-            divErr.textContent = err
-            divErr.style.display = 'block'
-         return null;
-		});
-}
 
 function showOrders()
 {
@@ -104,24 +33,6 @@ function showOrders()
     document.getElementById('pagePay').style.display='none';
 }
 
-function pay(type)
-{
-    var esito = document.getElementById('esitoPay')
-    esito.textContent = '-'
-    document.getElementById('pagePaid').style.display='block'
-    document.getElementById('pagePay').style.display='none'
-    // Simulo ritardo con un tempo ..
-    setTimeout(
-        function(){
-            document.getElementById('esitoPay').textContent = 'Pagamento registrato'
-            setTimeout(
-                function(){
-                    showHome()
-                }, 5000
-            )
-        }, 3000
-    )
-}
 
 
 /* Mostra/nasconde pagina settings */
@@ -201,22 +112,77 @@ function saveSettings(settings){
 }
 
 
-function getServer()
-{
-    if (settings.mode==MODE_STAGING)
-        return "https://staging.e-coop.it/virtualShop/rest/totem/";
-    if (settings.mode==MODE_NORMAL)
-        return "https://www.e-coop.it/virtualShop/rest/totem/";
-    return "??"
+async function getData()  {
+    console.log("getData")
+    try {
+        var restaurant = {};
+
+        // Get Restaurant Data
+        var resRef = firebase.firestore().collection("menu");
+        var resSnap = await resRef.get();
+        // console.log(resSnap)
+        resSnap.forEach((doc) => {
+            console.log(doc.data())
+        })
+        getMenuItems("pizze")
+        return restaurant
+    } catch (e) {
+        console.error(e)
+        return {
+            errorMsg: "Something went wrong. Please Try Again."
+        }
+    }
 }
 
+
+function getMenuItems(item) {
+    console.log("[getMenuItems] "+item)
+    // Elimina elementi aggiunti precedentemente
+    document.querySelectorAll('.itemAdded').forEach( e => e.remove())
+
+    try {
+        var items = {};
+
+        // Get Restaurant Data
+        var resRef = firebase.firestore().collection("menu");
+        resRef.doc(item).get().then( (itemSnap) => {
+            console.log(itemSnap.data())    // Nome sottomenu - es 'Pizze'
+            document.querySelector('#menuTitle').textContent = itemSnap.data().nome
+            
+            // SubCollection 'stesso nome'
+            resRef.doc(item).collection(item).get().then( (subitemSnap) => {
+                subitemSnap.forEach( (subitem) => {
+                    console.log(subitem.data()) // Elemento
+                    var data = subitem.data()
+
+                    // Duplica l'elemento 'template'
+                    var newEl = document.querySelector('#template').cloneNode(true);
+                    newEl.classList.add('itemAdded')
+                    newEl.querySelector('#templateTitle').textContent = data.nome
+                    newEl.querySelector('#templateDesc').textContent = data.ingredienti
+                    newEl.querySelector('#templatePrice').innerHTML = "&euro; "+data.prezzo.toFixed(2)
+                    newEl.style.display='block'
+                    document.querySelector('#mainList').appendChild(newEl);
+                })
+            })
+        })  
+    } catch (e) {
+        return {
+            errorMsg: "Something went wrong. Please Try Again."
+        }
+    }
+}
 
 
 function init() {
     console.log('init')
 
     settings = loadSettings();
+
+    getData()
+
     // updatePage()
+    console.log('init end')
 }
 
 // Inizializzazione indipendete dallo stato del serviceWorker
