@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang='it'>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizzeria Nuova Aurora</title>
+  
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <!-- <link rel="stylesheet" type="text/css" href="/menu.css"> -->
+
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="materialize.min.css"  media="screen,projection"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- TODO: Add iOS meta tags and icons -->
+
+    <meta name="description" content="Nuova Aurora app">
+
+    <!-- Meta theme-color -->
+    <meta name="theme-color" content="#2F3BA2" />
+</head>
+
+<body>
+
+    <!-- Header -->
+    <!--
+    <header>
+        <span class="header__icon">
+          <svg class="menu__icon no--select" width="24px" height="24px" viewBox="0 0 48 48" fill="#f90">
+            <path d="M6 36h36v-4H6v4zm0-10h36v-4H6v4zm0-14v4h36v-4H6z"></path>
+          </svg>
+        </span>
+        <span class="header__title no--select"><span id='negozioHeader'>Pizzeria Nuova Aurora</span></span>
+    </header>
+  -->
+
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">Pizzeria</a>
+      <ul id="nav-mobile" class="left hide-on-med-and-down">
+        <li><a a onclick="showHome()">Menu</a></li>
+        <li><a href="#">Ordine</a></li>
+        <li><a onclick="showContatti()">Contatti</a></li>
+      </ul>
+    </div>
+    <div class="nav-content">
+      <ul class="tabs tabs-transparent">
+        <li class="tab"><a href="#test1">Test 1</a></li>
+        <li class="tab"><a class="active" href="#test2">Test 2</a></li>
+        <li class="tab disabled"><a href="#test3">Disabled Tab</a></li>
+        <li class="tab"><a href="#test4">Test 4</a></li>
+      </ul>
+    </div>
+
+    <!-- Dropdown Trigger -->
+  <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>Scegli</a>
+
+  <!-- Dropdown Structure -->
+  <ul id='dropdown1' class='dropdown-content'>
+    <li><a href="#!" onclick="showHome()">Pizze</a></li>
+    <li><a href="#!">Primi</a></li>
+    <li><a href="#!">Secondi</a></li>
+    <li><a href="#!">Dolci</a></li>
+    <li class="divider" tabindex="-1"></li>
+    <li><a href="#!" onclick="showContatti()"><i class="material-icons">info_outline</i>Contatti</a></li>
+  </ul>
+
+  </nav>
+        
+    <!-- Menu laterale -->
+    <!--
+    <div class="menu">
+        <div class="menu__header"></div>
+        <ul class="menu__list">
+          <li><a onclick="showProperties(0)">Vai al menu</a></li>
+          <li><a onclick="showProperties(1);hideMenu()">Impostazioni</a></li>
+          <li><a onclick="">Contatti</a></li>
+        </ul>
+    </div>
+
+    <div class="menu__overlay"></div> -->
+      
+    <!-- Home -->
+    <div id='pageHome' style="text-align:center;">
+
+    <img src='/images/logo300.jpg' style='width: 150px; margin: 10px auto;'>
+
+    <div>
+      <button id='butInstall' style='width: 200px;margin-top: 60px' hidden>Installa app</button>
+    </div>
+
+    <table class="striped">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Prezzo</th>
+          <th>Aggiungi</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Margherita</td>
+          <td>&euro; 0.87</td>
+          <td><i class="small material-icons">add_circle_outline</i></td>
+        </tr>
+        <tr>
+          <td>Alan</td>
+          <td>&euro; 3.76</td>
+          <td><i class="small material-icons">add_circle_outline</i></td>
+        </tr>
+        <tr>
+          <td>Jonathan</td>
+          <td>&euro; 7.00</td>
+          <td><i class="small material-icons">add_circle_outline</i></td>
+        </tr>
+        <tr>
+          <td>Jonathan</td>
+          <td>&euro; 7.00</td>
+          <td><i class="small material-icons">add_circle_outline</i></td>
+        </tr>
+        <tr>
+          <td>Jonathan</td>
+          <td>&euro; 7.00</td>
+          <td><i class="small material-icons">add_circle_outline</i></td>
+        </tr>
+        <tr>
+          <td>Jonathan</td>
+          <td>&euro; 7.00</td>
+          <td><i class="small material-icons">add_circle_outline</i></td>
+        </tr>
+        <tr>
+          <td>Jonathan</td>
+          <td>&euro; 7.00</td>
+          <td><i class="small material-icons">add_circle_outline</i></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+
+    <!-- Pagina ordine -->
+    <div id='pageWaitOrders' style='display:none'>
+        <div style='margin-top: 80px;'>
+            <div onclick='showOrders();'>Richiesta in corso ...</div>
+        </div>
+        <div id='waitOrderDivError' 
+            style='position:absolute;width:100%;bottom:0; background-color: red;color: white; padding: 10px 0;font-size: 16px'
+            onclick="showHome()">
+            Messaggio errore
+        </div>
+    </div>
+
+    <!-- Pagina Contatti -->
+    <div id='pageContatti' style='display:none'>
+        <div style='margin-top: 70px'>
+          <div>Indirizzo: Via Capelli, 1 - Felino - Parma</div>
+          <div>Email: info@</div>
+            <div>Facebook: </div>
+            <div>Instagram:</div>
+        </div>
+    </div>
+
+    
+<script src="/scripts/app.js"></script>
+<!-- Add the install script here -->
+<script src="/scripts/install.js"></script>
+<!-- <script src="/scripts/menu.js"></script> -->
+
+<!--JavaScript at end of body for optimized loading-->
+<script type="text/javascript" src="scripts/materialize.min.js"></script>
+
+<script>
+
+// Attivazione navbar
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.dropdown-trigger');
+    var options = null
+    var instances = M.Dropdown.init(elems, options);
+  });
+
+
+// Register service worker.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+        .then((reg) => {
+          console.log('Service worker registered.', reg);
+        });
+  });
+}
+</script>
+
+
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDHAUjwgARzXGFdgkwm6QKJ6BTbiwlCiRs",
+    authDomain: "pizzeria-nuova-aurora.firebaseapp.com",
+    databaseURL: "https://pizzeria-nuova-aurora.firebaseio.com",
+    projectId: "pizzeria-nuova-aurora",
+    storageBucket: "pizzeria-nuova-aurora.appspot.com",
+    messagingSenderId: "563548335074",
+    appId: "1:563548335074:web:7f8028689a62bf142367bb",
+    measurementId: "G-1NSQNF5SQ3"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+
+
+
+
+</body>
+
+</html>

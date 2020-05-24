@@ -1,0 +1,95 @@
+
+body {
+    margin: 0;
+    font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+#pageOrders {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    top: 0;
+    background-color:lightgoldenrodyellow;
+}
+
+#pagePay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    background-color: lightblue;
+}
+
+#pagePaid {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    background-color: lightblue;
+    display: none;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+#esitoPay {
+    margin: 20px;
+}
+
+#pageWaitOrders {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    background-color: lightblue;
+    font-size: 35px;
+    text-align: center;
+}
+
+#pageSettings {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    background-color: rgb(235, 238, 189);
+    font-size: 20px;
+    display: none;
+}
+
+#pageSettings div {
+    margin: 10px 0 0 10px;
+}
+
+#ordersOrderNo {
+    font-size: 30px;
+}
+
+
+#orderImp {
+    font-size: 35px;
+}
+
+#orderNo {
+    font-size: 1.3em;
+    text-align: center;
+}
+
+.payClass {
+    text-align: center;
+    font-size: 35px;
+    /* margin: 5px 20px; */
+    /* padding: 5px 5px; */
+    width: 100%;
+}
+
+.ordClass {
+    text-align: center;
+    font-size: 35px;
+    margin: 5px 20px;
+    padding: 25px 5px;
+    border: orange solid 1px;
+}
+
+#shopId{
+    width: 100px;
+}
