@@ -54,8 +54,6 @@ Comunicazione con database
 --------------------------
 Firestore
 
-Autenticazione utenti - Authentication
---------------------------------------
 
 
 Menu laterale
