@@ -7,6 +7,7 @@
     <title>Pizzeria Nuova Aurora</title>
   
     <link rel="stylesheet" type="text/css" href="/style.css">
+
     <link rel="stylesheet" type="text/css" href="/menu.css">
 
     <!--Import materialize.css-->
@@ -38,10 +39,10 @@
     <div class="menu">
       <div class="menu__header"></div>
       <ul class="menu__list">
-        <li><a onclick="hideMenu();showHome('pizze')">Pizze</a></li>
-        <li><a onclick="showHome('primi');hideMenu()">Primi</a></li>
-        <li><a onclick="showHome('secondi');hideMenu()">Secondi</a></li>
-        <li><a onclick="showHome('dolci');hideMenu()">Dolci</a></li>
+        <li><a onclick="showHome('pizze')">Pizze</a></li>
+        <li><a onclick="showHome('speciali')">Pizze speciali</a></li>
+        <li><a onclick="showHome('calzoni')">Calzoni e pizze alte</a></li>
+        <li><a onclick="showHome('ristorante')">Ristorante</a></li>
         <li><a onclick="showContatti()">Contatti</a></li>
       </ul>
   </div>
@@ -63,15 +64,15 @@
 
       <ul class="collection with-header" id='mainList'>
           <li class="collection-item pink white-text">
-              <div id='menuTitle'>{{menu.title}}</div>
+            <div id='menuTitle'>{{menu.title}}</div>
           </li>
           <li class="collection-item" id="template" style="display:none">
-              <div>
-                  <span id='templateTitle'>{{item.title}}</span>
-                  <br />
-                  <span class="grey-text" id='templateDesc'>{{item.description}}</span>
-                  <a href="#!" class="secondary-content" id='templatePrice'>${{item.price}}</a>
-              </div>
+            <div>
+              <span id='templateTitle'>{{item.title}}</span>
+              <br />
+              <span class="grey-text" id='templateDesc'>{{item.description}}</span>
+              <a href="#!" class="secondary-content" id='templatePrice'>${{item.price}}</a>
+            </div>
           </li>
       </ul>
   </div>

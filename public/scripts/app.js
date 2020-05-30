@@ -179,7 +179,7 @@ function init() {
 
     settings = loadSettings();
 
-    getData()
+//    getData()
 
     // updatePage()
     console.log('init end')
