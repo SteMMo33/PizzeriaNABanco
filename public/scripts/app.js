@@ -124,8 +124,8 @@ async function getData()  {
 }
 
 
-function waitData(item) {
-    return firebase.firestore().collection("menu").doc("ristorante").collection(item).get()
+function waitData(submenu, item) {
+    return firebase.firestore().collection("menu").doc(submenu).collection(item).get()
 }
 
 function InsertItem(datalist, item){
@@ -165,13 +165,30 @@ function getMenuItems(item) {
             document.querySelector('#menuTitle').textContent = itemSnap.data().nome
             
             if (item=='ristorante'){
-                var r = await waitData('Primi piatti');
+                var r = await waitData("ristorante",'Antipasti');
+                InsertItem( r, "Antipasti")
+
+                r = await waitData("ristorante",'Primi piatti');
                 InsertItem( r, 'Primi piatti')
 
-                var r = await waitData('Secondi');
-                InsertItem( r, "Secondi")
-            }
+                r = await waitData("ristorante",'Secondi');
+                InsertItem( r, "Secondi piatti")
 
+                r = await waitData("ristorante",'Contorni');
+                InsertItem( r, "Contorni")
+
+                r = await waitData("ristorante",'Dolci');
+                InsertItem( r, "Dessert")
+            }
+            else if (item=='calzoni'){
+                var r = await waitData('calzoni','calzoni');
+                InsertItem( r, 'Calzoni')
+
+                r = await waitData('calzoni','pizze alte');
+                InsertItem( r, "Pizze alte")
+
+            }
+            else {
             // SubCollection 'stesso nome'
             resRef.doc(item).collection(item).get().then( (subitemSnap) => {
                 subitemSnap.forEach( (subitem) => {
@@ -188,6 +205,7 @@ function getMenuItems(item) {
                     document.querySelector('#mainList').appendChild(newEl);
                 })
             })
+        }
         })  
     } catch (e) {
         return {

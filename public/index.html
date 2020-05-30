@@ -26,16 +26,23 @@
 
 <body>
 
-    <!-- Header --
-    <header>
-        <span class="header__icon">
-          <svg class="menu__icon no--select" width="24px" height="24px" viewBox="0 0 48 48" fill="#f90">
-            <path d="M6 36h36v-4H6v4zm0-10h36v-4H6v4zm0-14v4h36v-4H6z"></path>
-          </svg>
-        </span>
-        <span class="header__title no--select">Pizzeria Nuova Aurora</span>
-    </header>
-  -->
+  <header class="header-fixed pusha-push">
+    <span class="header__icon">
+      <svg class="menu__icon no--select" width="24px" height="24px" viewBox="0 0 48 48" fill="#f90">
+        <path d="M6 36h36v-4H6v4zm0-10h36v-4H6v4zm0-14v4h36v-4H6z"></path>
+      </svg>
+    </span>
+  <!-- <span class="header__title no--select">Header Pizzeria</span> -->
+  <div class="pusha-wrapper" style='color: #fff; top: -58px;
+  font-size: 20px;
+  -ms-flex-item-align: center;
+  -ms-grid-row-align: center;
+  align-self: center;
+  margin-left: 55px;'>
+    <p>Pizzeria NUOVA AURORA</p>
+  </div>
+  </header>
+
 
     <div class="pusha-panel pusha-panel--left" aria-hidden="true">
       <div class="pusha-panel__content">
@@ -49,15 +56,6 @@
         </ul>
       </div>
     </div>
-
-    <header class="header-fixed pusha-push">
-      <span class="header__icon">
-        <svg class="menu__icon no--select" width="24px" height="24px" viewBox="0 0 48 48" fill="#f90">
-          <path d="M6 36h36v-4H6v4zm0-10h36v-4H6v4zm0-14v4h36v-4H6z"></path>
-        </svg>
-      </span>
-    <span class="header__title no--select">Header Pizzeria</span>
-    </header>
 
 
     <script src="scripts/pusha.min.js"></script>
@@ -80,10 +78,10 @@
       <ul class="collection with-header" id='mainList'>
 
           <li class="collection-item pink white-text">
-            <div id='menuTitle'>{{menu.title}}</div>
+            <div id='menuTitle' style='text-align: center;font-weight: 700;'>{{menu.title}}</div>
           </li>
           
-          <li class="collection-item pink yellow-text" id='templateMenu'  style="display:none">
+          <li class="collection-item pink yellow-text" id='templateMenu'  style="display:none;">
             <div id='submenuTitle'>{{menu.title}}</div>
           </li>
 
@@ -91,16 +89,18 @@
             <div>
               <table><tbody>
                 <tr style='border:none'><td>
-              <span id='templateTitle'>{{item.title}}</span>
+              <span id='templateTitle' style='font-weight: 700;'>{{item.title}}</span>
               <br />
               <span class="grey-text" id='templateDesc'>{{description}} {{description}} {{description}} {{description}} {{description}} {{description}}</span>
                 </td>
-              <td class="secondary-content" id='templatePrice' style='width: 60px;'>${{price}}</td>
+              <td class="secondary-content" id='templatePrice' 
+                style='width: 60px;text-align: right; font-weight: 800;'>${{price}}</td>
               </tr>
             </tbody>
             </table>
             </div>
           </li>
+
       </ul>
   </div>
   </div>
@@ -120,10 +120,12 @@
   <!-- Pagina Contatti -->
   <div id='pageContatti' class='page' style='display:none'>
     <img src='images/tuttisfum.png' style='width:100%'>
-    <div style='margin: 30px 10px 0 10px'>
+    <div style='margin: 5px 10px 0 10px'>
       <table>
-      <tr><td colspan='2'>Indirizzo: Via Capelli, 1 - Felino - Parma</td></tr>
-      <tr><td><img src='images/facebook-new.png' width='40px'></td><td>Facebook: XXX</td></tr>
+        <tr><td colspan='2'>Pizzeria <b>Nuova Aurora</b></td></tr>
+        <tr><td colspan='2'>Indirizzo: Via Capelli, 1 <br> 43035 Felino - Parma - Italia</td></tr>
+      <tr><td colspan='2'>Telefono: +39 0521 836269</td></tr>
+      <tr><td><img src='images/facebook-new.png' width='40px'></td><td>Facebook: <a href='https://www.facebook.com/pizzerianuovaaurora/'>pizzerianuovaaurora</td></tr>
       <tr><td><img src='images/instagram-new.png' width='40px'></td><td>Instagram: YYY</td></tr>
       </table>
     </div>
