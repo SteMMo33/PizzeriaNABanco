@@ -4,6 +4,10 @@ body {
     font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+.page {
+    margin-top: 60px;
+}
+
 #pageOrders {
     position: absolute;
     width: 100%;
@@ -21,30 +25,7 @@ body {
     background-color: lightblue;
 }
 
-#pagePaid {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    background-color: lightblue;
-    display: none;
-    text-align: center;
-    font-size: 1.5em;
-}
 
-#esitoPay {
-    margin: 20px;
-}
-
-#pageWaitOrders {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    background-color: lightblue;
-    font-size: 35px;
-    text-align: center;
-}
 
 #pageSettings {
     position: absolute;
@@ -90,6 +71,6 @@ body {
     border: orange solid 1px;
 }
 
-#shopId{
-    width: 100px;
+.collection .collection-item {
+    padding: 5px 10px;
 }

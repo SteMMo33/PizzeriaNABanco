@@ -1,14 +1,12 @@
 
 
 
-var headers = new Headers()
-
 /*
     Mosta la pagina principale
 */
 function showHome(item)
 {
-    console.log('showHome')
+    console.log('showHome '+item)
     document.getElementById('pageContatti').style.display='none';
     document.getElementById('pageHome').style.display='block';
     getMenuItems(item)
@@ -64,12 +62,7 @@ function acceptProperties(){
 
 
 function updatePage(){
-    console.log("updatePage")
-    // Cambia il titolo
-    //document.querySelector('#negozioHeader').textContent = 
-    //    settings.negozio + " - " + settings.mode
-    //document.querySelector('#username').textContent = settings.username
-    //document.querySelector('#password').textContent = settings.password
+    console.log("updatePage - ToDo")
 }
 
 
@@ -92,10 +85,6 @@ function loadSettings(){
   // Dati di default se non trovati altri salvataggi in localStorage
   if (!settings || Object.keys(settings).length === 0) {
       // Valori default
-      settings = {
-          negozio: 'Default',
-          mode: MODE_STAGING
-      }
   }
   return settings;
 }
@@ -135,6 +124,32 @@ async function getData()  {
 }
 
 
+function waitData(item) {
+    return firebase.firestore().collection("menu").doc("ristorante").collection(item).get()
+}
+
+function InsertItem(datalist, item){
+console.log(item)
+    if (item){
+        var newSub = document.querySelector('#templateMenu').cloneNode(true);
+        newSub.classList.add('itemAdded')
+        newSub.querySelector('#submenuTitle').textContent = item
+        newSub.style.display='block'
+        document.querySelector('#mainList').appendChild(newSub);
+    }
+
+    datalist.forEach( dataraw => {
+        var data = dataraw.data()
+        var newEl = document.querySelector('#template').cloneNode(true);
+        newEl.classList.add('itemAdded')
+        newEl.querySelector('#templateTitle').textContent = data.nome
+        newEl.querySelector('#templateDesc').textContent = data.ingredienti
+        newEl.querySelector('#templatePrice').innerHTML = "&euro; "+data.prezzo.toFixed(2)
+        newEl.style.display='block'
+        document.querySelector('#mainList').appendChild(newEl);
+    })
+}
+
 function getMenuItems(item) {
     console.log("[getMenuItems] "+item)
     // Elimina elementi aggiunti precedentemente
@@ -143,12 +158,20 @@ function getMenuItems(item) {
     try {
         var items = {};
 
-        // Get Restaurant Data
+        // Get Data
         var resRef = firebase.firestore().collection("menu");
-        resRef.doc(item).get().then( (itemSnap) => {
-            console.log(itemSnap.data())    // Nome sottomenu - es 'Pizze'
+        resRef.doc(item).get().then( async(itemSnap) => {
+            console.log(itemSnap.id, itemSnap.data())    // Nome sottomenu - es 'Pizze'
             document.querySelector('#menuTitle').textContent = itemSnap.data().nome
             
+            if (item=='ristorante'){
+                var r = await waitData('Primi piatti');
+                InsertItem( r, 'Primi piatti')
+
+                var r = await waitData('Secondi');
+                InsertItem( r, "Secondi")
+            }
+
             // SubCollection 'stesso nome'
             resRef.doc(item).collection(item).get().then( (subitemSnap) => {
                 subitemSnap.forEach( (subitem) => {
@@ -177,9 +200,10 @@ function getMenuItems(item) {
 function init() {
     console.log('init')
 
-    settings = loadSettings();
+//    settings = loadSettings();
 
 //    getData()
+  getMenuItems("pizze")
 
     // updatePage()
     console.log('init end')

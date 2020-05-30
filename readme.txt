@@ -23,8 +23,9 @@ Project Console: https://console.firebase.google.com/project/pizzeria-nuova-auro
 Hosting URL: https://pizzeria-nuova-aurora.web.app
 
 
-Nella barra in alto è apparsa un'icona/bottone pstile 'download', premuta la quale è apparso il
-messaggio di richista di installazione dell'app.
+Nella barra in alto è apparsa un'icona/bottone stile 'download', 
+premuta la quale è apparso il messaggio di richista di installazione dell'app - oppure
+la richiesta di inserimento icone su desktop.
 Premuto 'xxxx' è cominciata l'installazione sul cell.
 
 
@@ -51,18 +52,15 @@ I settings dell'applicazione vengono salvati in localStorage
 
 Comunicazione con database
 --------------------------
-
+Firestore
 
 Autenticazione utenti - Authentication
 --------------------------------------
-Creato un utente con email patty6262@gmail.com pwd:123456
-Creato un utente con email stefano.mora@libero.it pwd: 123456
 
 
 Menu laterale
 -------------
-Costruito con spunto preso da:
-https://auth0.com/blog/introduction-to-progressive-apps-part-one/#Application-Shell
+https://github.com/slavanga/pusha
 
 Stili:
 https://github.com/unicodeveloper/pwa-commits/blob/master/public/css/style.css
@@ -72,8 +70,4 @@ Debug
 -----
 E' possibile vedere gli ouput di debug del browser del cellulare?
 
-
-link
-----
-https://scotch.io/tutorials/add-auth-to-your-pwa-using-stencil-and-okta
 
