@@ -162,6 +162,10 @@ function getMenuItems(item) {
         var resRef = firebase.firestore().collection("menu");
         resRef.doc(item).get().then( async(itemSnap) => {
             console.log(itemSnap.id, itemSnap.data())    // Nome sottomenu - es 'Pizze'
+            if (itemSnap.data()==undefined){
+                document.querySelector('#menuTitle').textContent = 'Nessun dato'
+                return
+            }
             document.querySelector('#menuTitle').textContent = itemSnap.data().nome
             
             if (item=='ristorante'){
