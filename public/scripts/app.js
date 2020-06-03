@@ -162,6 +162,10 @@ function getMenuItems(item) {
         var resRef = firebase.firestore().collection("menu");
         resRef.doc(item).get().then( async(itemSnap) => {
             console.log(itemSnap.id, itemSnap.data())    // Nome sottomenu - es 'Pizze'
+            if (itemSnap.data()==undefined){
+                document.querySelector('#menuTitle').textContent = "Nessun dato"
+                return
+            }
             document.querySelector('#menuTitle').textContent = itemSnap.data().nome
             
             if (item=='ristorante'){
@@ -187,6 +191,14 @@ function getMenuItems(item) {
                 r = await waitData('calzoni','pizze alte');
                 InsertItem( r, "Pizze alte")
 
+            }
+            else if (item=='bevande'){
+                var r = await waitData('bevande','Bevande');
+                InsertItem( r, 'Bevande')
+                var r = await waitData('bevande','Dopo cena');
+                InsertItem( r, 'Dopo cena')
+                var r = await waitData('bevande','Lista dei vini');
+                InsertItem( r, 'Lista dei vini')
             }
             else {
             // SubCollection 'stesso nome'
