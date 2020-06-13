@@ -1,5 +1,7 @@
 
 
+var ordine = new Array()
+var listaArticoli = new Array()
 
 /*
     Mosta la pagina principale
@@ -32,6 +34,9 @@ function showOrders()
 }
 
 
+function addToOrder(e){
+    console.log("[addToOrder]", e)
+}
 
 /* Mostra/nasconde pagina settings */
 function showProperties(show){
@@ -164,7 +169,8 @@ function waitData(submenu, item) {
 }
 
 function InsertItem(datalist, item){
-console.log(item)
+    // Titolo pagina
+    console.log(item)
     if (item){
         var newSub = document.querySelector('#templateMenu').cloneNode(true);
         newSub.classList.add('itemAdded')
@@ -173,10 +179,17 @@ console.log(item)
         document.querySelector('#mainList').appendChild(newSub);
     }
 
+    // Lista articoli
+    listaArticoli = new Array()
+
     datalist.forEach( dataraw => {
         var data = dataraw.data()
+        // In Memoria
+        var idx = listaArticoli.push(data) -1
+        // A video
         var newEl = document.querySelector('#template').cloneNode(true);
         newEl.classList.add('itemAdded')
+        newEl.setAttribute('idx', idx)
         newEl.querySelector('#templateTitle').textContent = data.nome
         newEl.querySelector('#templateDesc').textContent = data.ingredienti
         newEl.querySelector('#templatePrice').innerHTML = "&euro; "+data.prezzo.toFixed(2)
@@ -205,6 +218,7 @@ function getMenuItems(item) {
             document.querySelector('#menuIcon').textContent = itemSnap.data().icona
             document.querySelector('#menuTitle').textContent = itemSnap.data().nome
             
+            // Qeusti hanno un sottomenu
             if (item=='ristorante'){
                 var r = await waitData("ristorante",'Antipasti');
                 InsertItem( r, "Antipasti")
@@ -238,29 +252,34 @@ function getMenuItems(item) {
                 InsertItem( r, 'Lista dei vini')
             }
             else {
-            // SubCollection 'stesso nome'
-            resRef.doc(item).collection(item).get().then( (subitemSnap) => {
-                subitemSnap.forEach( (subitem) => {
-                    // console.log(subitem.data()) // Elemento
-                    var data = subitem.data()
+                // SubCollection 'stesso nome'
+                resRef.doc(item).collection(item).get().then( (subitemSnap) => {
+                    listaArticoli = new Array()
+                    subitemSnap.forEach( (subitem) => {
+                        // console.log(subitem.data()) // Elemento
+                        var data = subitem.data()
+                        listaArticoli.push(data)
 
-                    // Duplica l'elemento 'template'
-                    var newEl = document.querySelector('#template').cloneNode(true);
-                    newEl.classList.add('itemAdded')
-                    newEl.querySelector('#templateTitle').textContent = data.nome
-                    newEl.querySelector('#templateDesc').textContent = data.ingredienti
-                    newEl.querySelector('#templatePrice').innerHTML = "&euro; "+data.prezzo.toFixed(2)
-                    newEl.style.display='block'
-                    document.querySelector('#mainList').appendChild(newEl);
+                        // Duplica l'elemento 'template'
+                        var newEl = document.querySelector('#template').cloneNode(true);
+                        newEl.classList.add('itemAdded')
+                        newEl.querySelector('#templateTitle').textContent = data.nome
+                        newEl.querySelector('#templateDesc').textContent = data.ingredienti
+                        newEl.querySelector('#templatePrice').innerHTML = "&euro; "+data.prezzo.toFixed(2)
+                        newEl.style.display='block'
+                        document.querySelector('#mainList').appendChild(newEl);
+                    })
+
+                    console.log(listaArticoli)
                 })
-            })
-        }
-        })  
+            }
+        })
     } catch (e) {
         return {
             errorMsg: "Something went wrong. Please Try Again."
         }
     }
+
 }
 
 
@@ -268,11 +287,7 @@ function init() {
     console.log('init')
 
 //    settings = loadSettings();
-
-//    getData()
-  getMenuItems("pizze")
-
-    // updatePage()
+    getMenuItems("pizze")
     console.log('init end')
 }
 
