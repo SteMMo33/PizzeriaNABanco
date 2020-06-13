@@ -166,6 +166,8 @@ function getMenuItems(item) {
                 document.querySelector('#menuTitle').textContent = "Nessun dato"
                 return
             }
+            // Compone il titolo
+            document.querySelector('#menuIcon').textContent = itemSnap.data().icona
             document.querySelector('#menuTitle').textContent = itemSnap.data().nome
             
             if (item=='ristorante'){
