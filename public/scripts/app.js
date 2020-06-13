@@ -101,6 +101,41 @@ function saveSettings(settings){
 }
 
 
+function sendEmail(){
+    console.log('[sendEmail]')
+    emailSubject = "Ordine Nuova Aurora"
+    emailBody = "Ordine:\n1 cipolle + origano\n1 vetegale\n\nGrazie\n\n"
+    window.location.href = "mailto:stefano.mora@libero.it?subject=" + emailSubject + "&body=" + emailBody
+}
+
+
+function saveOrder(){
+    console.log('[saveOrder]')
+    var dbOrdini = firebase.firestore().collection("ordini")
+    const id = "11112"; // dbOrdini.createId();
+
+    dbOrdini.doc(id).set({
+        id: id,
+        text: "Ordine",
+        nome: "Stefano",
+        data: firebase.firestore.FieldValue.serverTimestamp(),
+      })
+      .then(
+          function(){
+              console.log("[saveOrder] OK")
+              M.toast({html: "Ordine inviato correttamente"})
+          }
+      )
+      .catch(
+        function(error){
+            console.error("[saveOrder] ", error)
+        }
+    );
+  console.log('[saveOrder]')
+}
+
+
+
 async function getData()  {
     console.log("getData")
     try {
@@ -206,7 +241,7 @@ function getMenuItems(item) {
             // SubCollection 'stesso nome'
             resRef.doc(item).collection(item).get().then( (subitemSnap) => {
                 subitemSnap.forEach( (subitem) => {
-                    console.log(subitem.data()) // Elemento
+                    // console.log(subitem.data()) // Elemento
                     var data = subitem.data()
 
                     // Duplica l'elemento 'template'

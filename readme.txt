@@ -73,11 +73,14 @@ E' possibile vedere gli ouput di debug del browser del cellulare?
 -- Gestione Firestore esempio:
 Da https://frontmag.no/artikler/utvikling/build-pwa-app-real-time-data-offline-support
 
+OK ma ho dovuto aggiungere la Regola 'write' nel DB
+
+
 list() {
    return this.db.collection('/todos', ref => ref.orderBy('complete').orderBy('text')).valueChanges();
- }
+}
 
- add(text) {
+add(text) {
    const id = this.db.createId();
 
   return this.db.collection('todos').doc(id).set({
@@ -87,18 +90,19 @@ list() {
      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
    });
- }
+}
 
 
- complete(todo) {
+complete(todo) {
    return this.db.collection('todos').doc(todo.id).update({
      complete: todo.complete,
      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
    });
- }
+}
 
 
--- Email
+-- Email - non funziona -- 
+
 window.location.href = 'mailto:example@gmail.com';
 
 ()=>{
