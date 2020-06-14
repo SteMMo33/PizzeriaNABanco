@@ -34,12 +34,12 @@
     </span>
   <!-- <span class="header__title no--select">Header Pizzeria</span> -->
   <div class="pusha-wrapper" style='color: #fff; top: -58px;
-  font-size: 20px;
-  -ms-flex-item-align: center;
-  -ms-grid-row-align: center;
-  align-self: center;
-  margin-left: 55px;'>
-    <p>Pizzeria NUOVA AURORA</p>
+  font-size: 20px;  -ms-flex-item-align: center;  -ms-grid-row-align: center;
+  align-self: center; margin-left: 55px;'>
+    <p>Pizzeria NUOVA AURORA 
+      <span id='badge' class="new badge red" data-badge-caption="" 
+        style='margin-right: 4px;' onclick="showOrdine()">-</span>
+    </p>
   </div>
   </header>
 
@@ -85,6 +85,7 @@
             <div id='submenuTitle'>{{menu.title}}</div>
           </li>
 
+          <!-- Template -->
           <li class="collection-item" id="template" style="display:none">
             <div>
               <table><tbody>
@@ -111,15 +112,36 @@
   </div>
 
   <!-- Pagina ordine -->
-  <div id='pageWaitOrders' style='display:none'>
-        <div style='margin-top: 80px;'>
-            <div onclick='showOrders();'>Richiesta in corso ...</div>
-        </div>
-        <div id='waitOrderDivError' 
-            style='position:absolute;width:100%;bottom:0; background-color: red;color: white; padding: 10px 0;font-size: 16px'
-            onclick="showHome()">
-            Messaggio errore
-        </div>
+  <div id='pageOrdine' style='display:none' class='page'>
+        
+    <div class="container">
+
+      <ul class="collection with-header" id='mainListOrdine'>
+
+          <li class="collection-item pink white-text">
+            <i id='menuIcon' class="material-icons">format_list_bulleted</i>
+            <span id='menuTitle' style='text-align: center;font-weight: 700;'>ORDINE</span>
+          </li>
+          
+          <!-- Template Ordine -->
+          <li class="collection-item" id="templateOrdine" style="display:none">
+            <div>
+              <table><tbody>
+                <tr style='border:none'>
+                <td>
+                  <span id='templateOrdineTitle' style='font-weight: 700;'>{{item.title}}</span>
+                </td>
+                <td class="secondary-content" id='templateOrdineNo' 
+                  style='width: 72px; text-align: right; font-weight: 800;font-size:20px; float:none'>${{N}}
+                </td>
+              </tr>
+            </tbody>
+            </table>
+            </div>
+          </li>
+
+      </ul>
+  </div>
   </div>
 
   <!-- Pagina Contatti -->
@@ -142,6 +164,7 @@
     <div class="modal-content">
       <h6>Aggiungi l'articolo:</h6>
       <h5 id='dlgAddNome' style='color:red'>Nome</h5>
+      <input type='hidden' id='dlgAddIdx'>
       <h1 style='text-align: center;color: red;padding: 20px 0' id='dlgAddNumero'>1</h1>
       <p style='text-align: center;'>
         <span onclick='aggiungi1()' style='padding: 5px 12px'>

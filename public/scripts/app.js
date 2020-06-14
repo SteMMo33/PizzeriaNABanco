@@ -10,6 +10,7 @@ function showHome(item)
 {
     console.log('showHome '+item)
     document.getElementById('pageContatti').style.display='none';
+    document.getElementById('pageOrdine').style.display='none';
     document.getElementById('pageHome').style.display='block';
     getMenuItems(item)
 }
@@ -26,16 +27,34 @@ function showContatti()
 }
 
 
-function showOrders()
+function showOrdine()
 {
-    console.log('showOrders')
-    document.getElementById('pageOrders').style.display='block';
-    document.getElementById('pagePay').style.display='none';
+    console.log('showOrdine')
+    if (ordine.length==0){
+        M.toast({html: "Nessun elemento in ordine"})
+        return
+    }
+    // Svuota
+    document.querySelectorAll('.addedOrder').forEach( e => e.remove())
+    // Riempie la pagina Ordine
+    var template = document.querySelector('#templateOrdine');
+    var list = document.querySelector('#mainListOrdine');
+    ordine.forEach( function( val, idx){
+        var newSub = document.querySelector('#templateOrdine').cloneNode(true);
+        newSub.style.display='block'
+        newSub.classList.add('addedOrder')
+        newSub.querySelector('#templateOrdineTitle').textContent = val.nome
+        newSub.querySelector('#templateOrdineNo').textContent = val.qty
+        document.querySelector('#mainListOrdine').appendChild(newSub)
+    })
+    // Mostra pagina
+    document.getElementById('pageOrdine').style.display='block';
+    document.getElementById('pageHome').style.display='none';
 }
 
 
 function showDlgAddToOrder(e){
-    console.log("[showDlgAddToOrder]", e)
+    console.log("[showDlgAddToOrder]")
     if (dlgAddToOrder==null){
         console.error("dlgAddToOrder non definito!")
         return
@@ -47,6 +66,7 @@ function showDlgAddToOrder(e){
     var idx = p.getAttribute('idx')
     var data = listaArticoli[idx]
     // Aggiorna i dati in dlg
+    document.querySelector('#dlgAddIdx').val = idx
     document.querySelector('#dlgAddNumero').textContent = "1"
     document.querySelector('#dlgAddNome').textContent = data.nome
     // Apre dlg
@@ -72,6 +92,14 @@ function togli1(){
 
 function addToOrder(e){
     console.log("[addToOrder] ",e)
+
+    var idx = document.querySelector('#dlgAddIdx').val
+    var articolo = listaArticoli[idx]
+    articolo['qty'] = document.querySelector('#dlgAddNumero').textContent
+
+    ordine.push(articolo)
+    updateBadge(ordine.length)
+
     M.toast({ html:"Da finire .."})
 }
 
@@ -105,6 +133,14 @@ function acceptProperties(){
 
 function updatePage(){
     console.log("updatePage - ToDo")
+}
+
+function updateBadge(n){
+    var el = document.querySelector('#badge')
+    if (n < 1)
+        el.textContent = '-'
+    else
+        el.textContent = n
 }
 
 
@@ -152,7 +188,8 @@ function sendEmail(){
 
 
 function saveOrder(){
-    console.log('[saveOrder]')
+    console.log('[saveOrder]', ordine)
+
     var dbOrdini = firebase.firestore().collection("ordini")
     const id = "11112"; // dbOrdini.createId();
 
@@ -166,6 +203,9 @@ function saveOrder(){
           function(){
               console.log("[saveOrder] OK")
               M.toast({html: "Ordine inviato correttamente"})
+
+              ordine = new Array()
+              updateBadge(0)
           }
       )
       .catch(
@@ -311,7 +351,7 @@ function getMenuItems(item) {
                         ++idx;
                     })
 
-                    console.log(listaArticoli)
+                    // console.log(listaArticoli)
                 })
             }
         })
