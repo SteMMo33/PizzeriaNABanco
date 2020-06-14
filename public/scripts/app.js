@@ -34,8 +34,45 @@ function showOrders()
 }
 
 
+function showDlgAddToOrder(e){
+    console.log("[showDlgAddToOrder]", e)
+    if (dlgAddToOrder==null){
+        console.error("dlgAddToOrder non definito!")
+        return
+    }
+    var p = e.srcElement.parentElement
+    while(p.tagName!='LI'){
+        p = p.parentElement
+    }
+    var idx = p.getAttribute('idx')
+    var data = listaArticoli[idx]
+    // Aggiorna i dati in dlg
+    document.querySelector('#dlgAddNumero').textContent = "1"
+    document.querySelector('#dlgAddNome').textContent = data.nome
+    // Apre dlg
+    var dlg = dlgAddToOrder[0]
+    dlg.open()
+}
+
+function aggiungi1(){
+    var el = document.querySelector('#dlgAddNumero')
+    var no = Number(el.textContent)
+    no += 1
+    el.textContent = no
+}
+
+function togli1(){
+    var el = document.querySelector('#dlgAddNumero')
+    var no = el.textContent
+    if (no>1){
+        no -= 1
+        el.textContent = no
+    }
+}
+
 function addToOrder(e){
-    console.log("[addToOrder]", e)
+    console.log("[addToOrder] ",e)
+    M.toast({ html:"Da finire .."})
 }
 
 /* Mostra/nasconde pagina settings */
@@ -179,9 +216,6 @@ function InsertItem(datalist, item){
         document.querySelector('#mainList').appendChild(newSub);
     }
 
-    // Lista articoli
-    listaArticoli = new Array()
-
     datalist.forEach( dataraw => {
         var data = dataraw.data()
         // In Memoria
@@ -189,7 +223,8 @@ function InsertItem(datalist, item){
         // A video
         var newEl = document.querySelector('#template').cloneNode(true);
         newEl.classList.add('itemAdded')
-        newEl.setAttribute('idx', idx)
+        newEl.setAttribute('idx', idx.toString())
+        newEl.onclick = showDlgAddToOrder
         newEl.querySelector('#templateTitle').textContent = data.nome
         newEl.querySelector('#templateDesc').textContent = data.ingredienti
         newEl.querySelector('#templatePrice').innerHTML = "&euro; "+data.prezzo.toFixed(2)
@@ -218,6 +253,9 @@ function getMenuItems(item) {
             document.querySelector('#menuIcon').textContent = itemSnap.data().icona
             document.querySelector('#menuTitle').textContent = itemSnap.data().nome
             
+            // Lista articoli
+            listaArticoli = new Array()
+
             // Qeusti hanno un sottomenu
             if (item=='ristorante'){
                 var r = await waitData("ristorante",'Antipasti');
@@ -254,7 +292,7 @@ function getMenuItems(item) {
             else {
                 // SubCollection 'stesso nome'
                 resRef.doc(item).collection(item).get().then( (subitemSnap) => {
-                    listaArticoli = new Array()
+                    var idx = 0
                     subitemSnap.forEach( (subitem) => {
                         // console.log(subitem.data()) // Elemento
                         var data = subitem.data()
@@ -263,11 +301,14 @@ function getMenuItems(item) {
                         // Duplica l'elemento 'template'
                         var newEl = document.querySelector('#template').cloneNode(true);
                         newEl.classList.add('itemAdded')
+                        newEl.setAttribute('idx', idx.toString())
+                        newEl.onclick = showDlgAddToOrder
                         newEl.querySelector('#templateTitle').textContent = data.nome
                         newEl.querySelector('#templateDesc').textContent = data.ingredienti
                         newEl.querySelector('#templatePrice').innerHTML = "&euro; "+data.prezzo.toFixed(2)
                         newEl.style.display='block'
                         document.querySelector('#mainList').appendChild(newEl);
+                        ++idx;
                     })
 
                     console.log(listaArticoli)
@@ -285,9 +326,8 @@ function getMenuItems(item) {
 
 function init() {
     console.log('init')
-
 //    settings = loadSettings();
-    getMenuItems("pizze")
+    getMenuItems("speciali")
     console.log('init end')
 }
 
