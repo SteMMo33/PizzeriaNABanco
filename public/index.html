@@ -38,30 +38,21 @@
   align-self: center; margin-left: 55px;'>
     <p>Pizzeria NUOVA AURORA 
       <span id='badge' class="new badge red" data-badge-caption="" 
-        style='margin-right: 4px;' onclick="showOrdine()">-</span>
+        style='margin-right: 4px;border-radius: 8px;' onclick="showOrdine()">-</span>
     </p>
   </div>
   </header>
 
     <div class="pusha-panel pusha-panel--left" aria-hidden="true">
       <div class="pusha-panel__content">
-        <img src='/images/logo300.jpg' style='width: 180px; margin: 20px auto;display:block;'>
+        <img src='/images/logo300.jpg' style='width: 180px; margin: 15px auto;display:block;'>
         <ul class="menu__list">
-<<<<<<< HEAD
-          <li><a onclick="showHome('pizze');panel.close();">Pizze</a></li>
-          <li><a onclick="showHome('speciali');panel.close();">Pizze speciali</a></li>
-          <li><a onclick="showHome('calzoni');panel.close();">Calzoni e pizze alte</a></li>
-          <li><a onclick="showHome('ristorante');panel.close();">Ristorante</a></li>
-          <li><a onclick="showHome('bevande');panel.close();">Bevande</a></li>
-          <li><a onclick="showContatti();panel.close();">Contatti</a></li>
-=======
           <li><a onclick="showHome('pizze');panel.close();"><i class="material-icons">local_pizza</i> Pizze</a></li>
           <li><a onclick="showHome('speciali');panel.close();"><i class="material-icons">local_pizza</i> Pizze speciali</a></li>
           <li><a onclick="showHome('calzoni');panel.close();"><i class="material-icons">local_pizza</i> Calzoni e pizze alte</a></li>
           <li><a onclick="showHome('ristorante');panel.close();"><i class="material-icons">restaurant</i> Ristorante</a></li>
           <li><a onclick="showHome('bevande');panel.close();"><i class="material-icons">local_bar</i> Bevande</a></li>
           <li><a onclick="showContatti();panel.close();"><i class="material-icons">group</i> Contatti</a></li>
->>>>>>> 2e3cbd225c8a6978525dc840948f9ab5d7d47878
         </ul>
       </div>
     </div>
@@ -155,7 +146,7 @@
 
   <!-- Pagina Contatti -->
   <div id='pageContatti' class='page' style='display:none'>
-    <img src='images/tuttisfum.png' style='width:100%' onclick="saveOrder()">
+    <img src='images/tuttisfum.png' style='width:100%' onclick="sendWA()">
     <div style='margin: 0px 10px 0 10px'>
       <table>
         <tr><td colspan='2'>Pizzeria <b>Nuova Aurora</b></td></tr>

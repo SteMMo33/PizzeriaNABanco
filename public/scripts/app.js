@@ -98,6 +98,7 @@ function addToOrder(e){
     articolo['qty'] = document.querySelector('#dlgAddNumero').textContent
 
     ordine.push(articolo)
+    // updateBadge(ordine.length)
     updateBadge(ordine.length)
 
     M.toast({ html:"Da finire .."})
@@ -186,6 +187,12 @@ function sendEmail(){
     window.location.href = "mailto:stefano.mora@libero.it?subject=" + emailSubject + "&body=" + emailBody
 }
 
+function sendWA(){
+    console.log('[sendWA]')
+    var wa = "393471418401"
+    var text = "Prova invio messaggio da PWA"
+    window.open("https://api.whatsapp.com/send?phone="+wa+"&text="+text)
+}
 
 function saveOrder(){
     console.log('[saveOrder]', ordine)
