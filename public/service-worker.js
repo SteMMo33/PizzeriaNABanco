@@ -1,11 +1,13 @@
 //
 
-const CACHE_NAME = 'static-cache-v1';
+const CACHE_NAME = 'static-cache-v2';
 
 
 // Add list of files to cache here.
 const FILES_TO_CACHE = [
     '/offline.html',
+    '/images/tuttisfum.png',
+    '/images/logo300.jpg'
 ];
 
 var settings= [
@@ -53,7 +55,6 @@ self.addEventListener('activate', (evt) => {
 /* FETCH */
 self.addEventListener('fetch', (evt) => {
   console.log('[ServiceWorker] Fetch', evt.request.url);
-  // CODELAB: Add fetch event handler here.
-
+  // ToDo: Add fetch event handler here.
 });
 

@@ -24,6 +24,7 @@ function showContatti()
     console.log('showContatti')
     document.getElementById('pageContatti').style.display='block';
     document.getElementById('pageHome').style.display='none';
+    document.getElementById('pageOrdine').style.display='none';
 }
 
 
@@ -101,7 +102,7 @@ function addToOrder(e){
     // updateBadge(ordine.length)
     updateBadge(ordine.length)
 
-    M.toast({ html:"Da finire .."})
+    M.toast({ html:"Aggiunto. Da finire .."})
 }
 
 /* Mostra/nasconde pagina settings */
@@ -125,18 +126,17 @@ function acceptProperties(){
 
     // Salva le impostazioni
     saveSettings(settings)
-    // Aggiorna la pagina
-    updatePage()
-    // Nsconde la pagina settings
+    // Nasconde la pagina settings
     showProperties(0)
 }
 
 
-function updatePage(){
-    console.log("updatePage - ToDo")
-}
 
 function updateBadge(n){
+    var n = 0
+    ordine.forEach( (value) => {
+        n += Number(value.qty)
+    })
     var el = document.querySelector('#badge')
     if (n < 1)
         el.textContent = '-'
@@ -190,8 +190,12 @@ function sendEmail(){
 function sendWA(){
     console.log('[sendWA]')
     var wa = "393471418401"
-    var text = "Prova invio messaggio da PWA"
-    window.open("https://api.whatsapp.com/send?phone="+wa+"&text="+text)
+    var text = JSON.stringify(ordine); // "Prova invio messaggio da PWA"
+    // window.open("https://api.whatsapp.com/send?phone="+wa+"&text="+text)
+    window.location.href("https://api.whatsapp.com/send?phone="+wa+"&text="+text)
+
+    M.toast({html: "Ordine inviato correttamente via WA"})
+    ResetOrder()
 }
 
 function saveOrder(){
@@ -200,9 +204,10 @@ function saveOrder(){
     var dbOrdini = firebase.firestore().collection("ordini")
     const id = "11112"; // dbOrdini.createId();
 
+    // Scrittura record
     dbOrdini.doc(id).set({
         id: id,
-        text: "Ordine",
+        text: JSON.stringify(ordine), // "Ordine",
         nome: "Stefano",
         data: firebase.firestore.FieldValue.serverTimestamp(),
       })
@@ -210,9 +215,7 @@ function saveOrder(){
           function(){
               console.log("[saveOrder] OK")
               M.toast({html: "Ordine inviato correttamente"})
-
-              ordine = new Array()
-              updateBadge(0)
+            ResetOrder()
           }
       )
       .catch(
@@ -223,7 +226,11 @@ function saveOrder(){
   console.log('[saveOrder]')
 }
 
-
+function ResetOrder() {
+    // Reset lista
+    ordine = new Array()
+    updateBadge(0)
+}
 
 async function getData()  {
     console.log("getData")

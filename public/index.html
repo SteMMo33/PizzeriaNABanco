@@ -142,11 +142,23 @@
 
       </ul>
   </div>
+ 
+  <div class="row" style="width: 90%; text-align: center;">
+	<div class="input-field">
+	  <input placeholder="Placeholder" id="first_name" type="text" class="validate">
+	  <label for="first_name">Nome</label>
+	</div>
+
+	<a class="waves-effect waves-light btn-large" onclick="sendWA()">
+		<i class="material-icons right">cloud</i>
+		Invia ordine</a>
+</div>
+
   </div>
 
   <!-- Pagina Contatti -->
   <div id='pageContatti' class='page' style='display:none'>
-    <img src='images/tuttisfum.png' style='width:100%' onclick="sendWA()">
+    <img src='images/tuttisfum.png' style='width:100%' onclick="saveOrder()">
     <div style='margin: 0px 10px 0 10px'>
       <table>
         <tr><td colspan='2'>Pizzeria <b>Nuova Aurora</b></td></tr>
