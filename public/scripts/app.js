@@ -92,7 +92,7 @@ function togli1(){
 }
 
 function addToOrder(e){
-    console.log("[addToOrder] ",e)
+    console.log("[addToOrder]")
 
     var idx = document.querySelector('#dlgAddIdx').val
     var articolo = listaArticoli[idx]
@@ -102,7 +102,7 @@ function addToOrder(e){
     // updateBadge(ordine.length)
     updateBadge(ordine.length)
 
-    M.toast({ html:"Aggiunto. Da finire .."})
+    M.toast({ html:"Aggiunto all'ordine!"})
 }
 
 /* Mostra/nasconde pagina settings */
@@ -198,25 +198,33 @@ function sendWA(){
     ResetOrder()
 }
 
+
 function saveOrder(){
     console.log('[saveOrder]', ordine)
 
+    // Controllo nome
+    var nome = document.querySelector("#orderName").value;
+    if(nome==""){
+        M.toast({html:"Il nome è obbligatorio"});
+        return;
+    }
+    ordine['nome']=nome
+
     var dbOrdini = firebase.firestore().collection("ordini")
-    const id = "11112"; // dbOrdini.createId();
+    var id = Date.now().toString(); // dbOrdini.createId();
 
     // Scrittura record
     dbOrdini.doc(id).set({
-        id: id,
-        text: JSON.stringify(ordine), // "Ordine",
-        nome: "Stefano",
+        ordine: JSON.stringify(ordine), // "Ordine",
+        nome: nome,
         data: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then(
-          function(){
-              console.log("[saveOrder] OK")
-              M.toast({html: "Ordine inviato correttamente"})
-            ResetOrder()
-          }
+         function(){
+            console.log("[saveOrder] OK")
+            M.toast({html: "Ordine inviato correttamente"})
+            setTimeout( function(){ResetOrder(); showHome('pizze')}, 4000);
+         }
       )
       .catch(
         function(error){
@@ -225,6 +233,7 @@ function saveOrder(){
     );
   console.log('[saveOrder]')
 }
+
 
 function ResetOrder() {
     // Reset lista
