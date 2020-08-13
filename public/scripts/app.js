@@ -158,7 +158,8 @@ function saveOrder(){
     dbOrdini.doc(id).set({
         ordine: JSON.stringify(ordine), // "Ordine",
         nome: nome,
-        data: firebase.firestore.FieldValue.serverTimestamp(),
+		  data: firebase.firestore.FieldValue.serverTimestamp(),
+		  servito: false
       })
       .then(
          function(){
