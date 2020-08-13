@@ -1,7 +1,7 @@
 
-
 var ordine = new Array()
 var listaArticoli = new Array()
+var totaleOrdine = 0
 
 /*
     Mosta la pagina principale
@@ -35,11 +35,14 @@ function showOrdine()
         M.toast({html: "Nessun elemento in ordine"})
         return
     }
-    // Svuota
+    // Svuota eventuale lista precedente
     document.querySelectorAll('.addedOrder').forEach( e => e.remove())
     // Riempie la pagina Ordine
     var template = document.querySelector('#templateOrdine');
     var list = document.querySelector('#mainListOrdine');
+    var totaleDiv = document.querySelector('#totaleOrdine');
+
+    totaleOrdine = 0;
     ordine.forEach( function( val, idx){
         var newSub = document.querySelector('#templateOrdine').cloneNode(true);
         newSub.style.display='block'
@@ -47,14 +50,18 @@ function showOrdine()
         newSub.querySelector('#templateOrdineTitle').textContent = val.nome
         newSub.querySelector('#templateOrdineNo').textContent = val.qty
         document.querySelector('#mainListOrdine').appendChild(newSub)
+        totaleOrdine += val.qty*val.price
     })
+    totale.textContent = "Totale ordine: &euro "+totaleOrdine
+
     // Mostra pagina
     document.getElementById('pageOrdine').style.display='block';
     document.getElementById('pageHome').style.display='none';
 }
 
-
+// Mostra la dlg con la richiesta della quantità
 function showDlgAddToOrder(e){
+
     console.log("[showDlgAddToOrder]")
     if (dlgAddToOrder==null){
         console.error("dlgAddToOrder non definito!")
@@ -70,7 +77,7 @@ function showDlgAddToOrder(e){
     document.querySelector('#dlgAddIdx').val = idx
     document.querySelector('#dlgAddNumero').textContent = "1"
     document.querySelector('#dlgAddNome').textContent = data.nome
-    // Apre dlg
+    // Apre la dlg
     var dlg = dlgAddToOrder[0]
     dlg.open()
 }
