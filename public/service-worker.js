@@ -1,19 +1,17 @@
 //
 
-const CACHE_NAME = 'static-cache-v2';
+const CACHE_NAME = 'static-cache-v3';
 
 
 // Add list of files to cache here.
 const FILES_TO_CACHE = [
     '/offline.html',
     '/images/tuttisfum.png',
-    '/images/logo300.jpg'
+    '/images/logo300.jpg',
+    '/images/facebook-new.png',
+    '/images/instagram-new.png'
 ];
 
-var settings= [
-  mode = '',
-  negozio = ''
-];
 
 
 /* INSTALL */

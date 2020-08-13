@@ -105,31 +105,6 @@ function addToOrder(e){
     M.toast({ html:"Aggiunto all'ordine!"})
 }
 
-/* Mostra/nasconde pagina settings */
-function showProperties(show){
-    // document.querySelector('#pageSettings').style.display= (show=='1' ? 'block':'none')
-}
-
-
-function acceptProperties(){
-    // Lettura campi della form
-    var select = document.querySelector('#selectNegozio')
-    settings.negozio = select.options[select.selectedIndex].value
-
-    select = document.querySelector('#selectMode')
-    settings.mode = select.options[select.selectedIndex].value
-
-    settings.username = document.querySelector('#username').value
-    settings.password = document.querySelector('#password').value
-    settings.shopId = document.querySelector('#shopId').value
-    settings.totemId = document.querySelector('#totemId').value
-
-    // Salva le impostazioni
-    saveSettings(settings)
-    // Nasconde la pagina settings
-    showProperties(0)
-}
-
 
 
 function updateBadge(n){
@@ -144,40 +119,6 @@ function updateBadge(n){
         el.textContent = n
 }
 
-
-/* 
-    Lettura settings in localStorage 
-    I dati arrivano salvati in JSON e vengono
-    convertiti in array
-*/
-function loadSettings(){
-    console.log("loadSettings")
-  // Guarda in LocalStorage se ci sono posti salvati
-  let settings = localStorage.getItem('settings');
-  if (settings) {
-    try {
-        settings = JSON.parse(settings);
-    } catch (ex) {
-        settings = {};
-    }
-  }
-  // Dati di default se non trovati altri salvataggi in localStorage
-  if (!settings || Object.keys(settings).length === 0) {
-      // Valori default
-  }
-  return settings;
-}
-
-
-/* 
-    Salvataggio dei settings in localStorage
-    I dati arrivano in forma di array e vengono salvati in JSON
-*/
-function saveSettings(settings){
-    console.log("saveSettings")
-    const data = JSON.stringify(settings);
-    localStorage.setItem('settings', data);
-}
 
 
 function sendEmail(){
@@ -389,7 +330,6 @@ function getMenuItems(item) {
 
 function init() {
     console.log('init')
-//    settings = loadSettings();
     getMenuItems("speciali")
     console.log('init end')
 }
