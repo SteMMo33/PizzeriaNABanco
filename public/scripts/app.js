@@ -50,9 +50,9 @@ function showOrdine()
         newSub.querySelector('#templateOrdineTitle').textContent = val.nome
         newSub.querySelector('#templateOrdineNo').textContent = val.qty
         document.querySelector('#mainListOrdine').appendChild(newSub)
-        totaleOrdine += val.qty*val.price
+        totaleOrdine += Number(val.qty)*Number(val.prezzo)
     })
-    totale.textContent = "Totale ordine: &euro "+totaleOrdine
+    totaleDiv.innerHTML = "Totale ordine: <b>&euro; "+totaleOrdine.toFixed(2)+"</b>"
 
     // Mostra pagina
     document.getElementById('pageOrdine').style.display='block';
@@ -165,8 +165,9 @@ function saveOrder(){
     dbOrdini.doc(id).set({
         ordine: JSON.stringify(ordine), // "Ordine",
         nome: nome,
-		  data: firebase.firestore.FieldValue.serverTimestamp(),
-		  servito: false
+		data: firebase.firestore.FieldValue.serverTimestamp(),
+        servito: false,
+        totale: totaleOrdine
       })
       .then(
          function(){
