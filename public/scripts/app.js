@@ -246,22 +246,30 @@ function InsertItem(datalist, item){
     })
 }
 
-function getMenuItems(item) {
-    console.log("[getMenuItems] "+item)
+
+
+function getOrdini(item) {
+    console.log("[+getOrdini] "+item)
     // Elimina elementi aggiunti precedentemente
     document.querySelectorAll('.itemAdded').forEach( e => e.remove())
 
     try {
-        var items = {};
+        var orders = {};
 
         // Get Data
-        var resRef = firebase.firestore().collection("menu");
-        resRef.doc(item).get().then( async(itemSnap) => {
-            console.log(itemSnap.id, itemSnap.data())    // Nome sottomenu - es 'Pizze'
-            if (itemSnap.data()==undefined){
-                document.querySelector('#menuTitle').textContent = "Nessun dato"
-                return
-            }
+        var resRef = firebase.firestore().collection("ordini");
+        console.log("> Richiesta ..")
+        resRef.get().then( async(itemSnap) => {
+
+            // console.log("itemSnap: ", itemSnap)    // 
+
+            itemSnap.forEach(
+                function(a,b){
+                    // console.log(a)
+                    console.log(a.data())
+                }
+            )
+            /**
             // Compone il titolo
             document.querySelector('#menuIcon').textContent = itemSnap.data().icona
             document.querySelector('#menuTitle').textContent = itemSnap.data().nome
@@ -273,15 +281,6 @@ function getMenuItems(item) {
             if (item=='ristorante'){
                 var r = await waitData("ristorante",'Antipasti');
                 InsertItem( r, "Antipasti")
-
-                r = await waitData("ristorante",'Primi piatti');
-                InsertItem( r, 'Primi piatti')
-
-                r = await waitData("ristorante",'Secondi');
-                InsertItem( r, "Secondi piatti")
-
-                r = await waitData("ristorante",'Contorni');
-                InsertItem( r, "Contorni")
 
                 r = await waitData("ristorante",'Dolci');
                 InsertItem( r, "Dessert")
@@ -327,19 +326,21 @@ function getMenuItems(item) {
                     // console.log(listaArticoli)
                 })
             }
+            */
         })
     } catch (e) {
+        console.error(e)
         return {
             errorMsg: "Something went wrong. Please Try Again."
         }
     }
-
+    console.log("[-getOrdini]")
 }
 
 
 function init() {
     console.log('init')
-    getMenuItems("speciali")
+    getOrdini("non")
     console.log('init end')
 }
 
