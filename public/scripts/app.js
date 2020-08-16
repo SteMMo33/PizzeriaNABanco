@@ -255,20 +255,59 @@ function getOrdini(item) {
 
     try {
         var orders = {};
+        var nOrdini = 0;
+        var nElementi = 0;
 
         // Get Data
         var resRef = firebase.firestore().collection("ordini");
         console.log("> Richiesta ..")
-        resRef.get().then( async(itemSnap) => {
+        resRef.get().then( async(orderList) => {
 
-            // console.log("itemSnap: ", itemSnap)    // 
+            // console.log("orderList: ", orderList)    // 
 
-            itemSnap.forEach(
-                function(a,b){
-                    // console.log(a)
-                    console.log(a.data())
+            orderList.forEach(
+                function(order){
+                    var orderData = order.data();
+                    console.log(orderData)
+                    console.log(orderData.nome)
+                    console.log(orderData.id)
+
+                    ++nOrdini
+
+                    var jsonOrder = orderData.ordine
+                    if(typeof jsonOrder=='undefined')
+                        jsonOrder = "{\"ordine\":[{\"nome\":\"Problema nei dati\",\"qty\":\"-\"}]}"
+                    if(jsonOrder.startsWith("["))
+                        jsonOrder = "{\"ordine\":"+jsonOrder+"}"
+                    console.log("json: ",jsonOrder)
+                    var objOrdine = JSON.parse(jsonOrder)
+                    objOrdine.ordine.forEach(
+                        function(elemento){
+                            console.log(elemento.nome)
+
+                            // Duplica l'elemento 'template'
+                            var newEl = document.querySelector('#template').cloneNode(true);
+                            newEl.classList.add('itemAdded')
+                            // newEl.setAttribute('idx', idx.toString())
+                            // newEl.onclick = showDlgAddToOrder
+                            newEl.querySelector('#templateTitle').textContent = elemento.nome
+                            newEl.querySelector('#templateDesc').textContent = orderData.nome + " - " + orderData.data.toDate()
+                            //newEl.querySelector('#templatePrice').innerHTML = "&euro; "+data.prezzo.toFixed(2)
+                            newEl.querySelector('#templatePrice').innerHTML = elemento.qty
+
+                            newEl.style.display='block'
+                            document.querySelector('#mainList').appendChild(newEl);
+
+                            ++nElementi;
+                        }
+                    )
                 }
             )
+
+            console.log("Ordini: ",nOrdini)
+            console.log("nElementi: ", nElementi)
+            document.querySelector('#menuTitle').textContent = "Ordini: "+nOrdini+" - Elementi: "+nElementi
+
             /**
             // Compone il titolo
             document.querySelector('#menuIcon').textContent = itemSnap.data().icona

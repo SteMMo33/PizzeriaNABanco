@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pizzeria Nuova Aurora</title>
+    <title>Pizzeria Nuova Aurora Banco</title>
   
     <link rel="stylesheet" href="css/pusha.min.css" />
     <link rel="stylesheet" href="css/menu.css" />
@@ -16,9 +16,7 @@
 
     <link rel="manifest" href="/manifest.json">
 
-    <!-- TODO: Add iOS meta tags and icons -->
-
-    <meta name="description" content="Nuova Aurora app">
+    <meta name="description" content="Nuova Aurora Banco app">
 
     <!-- Meta theme-color -->
     <meta name="theme-color" content="#2F3BA2" />
@@ -36,9 +34,7 @@
   <div class="pusha-wrapper" style='color: #fff; top: -58px;
   font-size: 20px;  -ms-flex-item-align: center;  -ms-grid-row-align: center;
   align-self: center; margin-left: 55px;'>
-    <p>Pizzeria NUOVA AURORA 
-      <span id='badge' class="new badge red" data-badge-caption="" 
-        style='margin-right: 4px;border-radius: 8px;' onclick="showOrdine()">-</span>
+    <p>Pizzeria NUOVA AURORA BANCO
     </p>
   </div>
   </header>
@@ -49,9 +45,6 @@
         <ul class="menu__list">
           <li><a onclick="showHome('pizze');panel.close();"><i class="material-icons">local_pizza</i> Pizze</a></li>
           <li><a onclick="showHome('speciali');panel.close();"><i class="material-icons">local_pizza</i> Pizze speciali</a></li>
-          <li><a onclick="showHome('calzoni');panel.close();"><i class="material-icons">local_pizza</i> Calzoni e pizze alte</a></li>
-          <li><a onclick="showHome('ristorante');panel.close();"><i class="material-icons">restaurant</i> Ristorante</a></li>
-          <li><a onclick="showHome('bevande');panel.close();"><i class="material-icons">local_bar</i> Bevande</a></li>
           <li><a onclick="showContatti();panel.close();"><i class="material-icons">group</i> Contatti</a></li>
         </ul>
       </div>
@@ -96,7 +89,7 @@
                   <span class="grey-text" id='templateDesc'>{{description}}</span>
                 </td>
                 <td class="secondary-content" id='templatePrice' 
-                  style='width: 72px; text-align: right; font-weight: 800;font-size:20px; float:none'>${{price}}
+                  style='width: 72px; text-align: right; font-weight: 800;font-size:28px; float:none'>${{price}}
                 </td>
                 <td id='templatePlus' style='text-align: right;'>
                   <i id='menuIcon' class="material-icons">add_circle</i>
@@ -160,20 +153,6 @@
 
   </div>
 
-  <!-- Pagina Contatti -->
-  <div id='pageContatti' class='page' style='display:none'>
-    <img src='images/tuttisfum.png' style='width:100%'>
-    <div style='margin: 0px 10px 0 10px'>
-      <table>
-        <tr><td colspan='2'>Pizzeria <b>Nuova Aurora</b></td></tr>
-        <tr><td colspan='2'>Indirizzo: Via Capelli, 1 <br> 43035 Felino - Parma - Italia</td></tr>
-      <tr><td colspan='2'>Telefono: <a href='tel:+39-0521-836269'>+39 0521 836269</a></td></tr>
-      <tr><td colspan='2'>Telefono: <a href='tel:+39-339-3010475'>+39 339 3010475</a></td></tr>
-      <tr><td><img src='images/facebook-new.png' width='40px'></td><td>Facebook: <a href='https://www.facebook.com/pizzerianuovaaurora/'>pizzerianuovaaurora</td></tr>
-      <tr><td><img src='images/instagram-new.png' width='40px'></td><td>Instagram: <a href='https://www.instagram.com/pizzeria_nuova_aurora/'>pizzeria_nuova_aurora</a></td></tr>
-      </table>
-    </div>
-  </div>
 
   <!-- Modal Dlg Structure -->
   <div id="dlgAddItem" class="modal">
@@ -227,12 +206,9 @@ if ('serviceWorker' in navigator) {
 
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/7.14.5/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.14.5/firebase-firestore.js"></script>
-
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="https://www.gstatic.com/firebasejs/7.14.5/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-analytics.js"></script>
 
 <script>
   // Your web app's Firebase configuration
@@ -243,8 +219,8 @@ if ('serviceWorker' in navigator) {
     projectId: "pizzeria-nuova-aurora",
     storageBucket: "pizzeria-nuova-aurora.appspot.com",
     messagingSenderId: "563548335074",
-    appId: "1:563548335074:web:7f8028689a62bf142367bb",
-    measurementId: "G-1NSQNF5SQ3"
+    appId: "1:563548335074:web:1dc434b4eebecdde2367bb",
+    measurementId: "G-BHRS5C85YM"
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
