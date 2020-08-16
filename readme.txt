@@ -1,12 +1,12 @@
 
-Progetto Nuova Aurora
-=====================
+Progetto Nuova Aurora Banco
+===========================
 
 Firebase
 ........
 Creato su Firebase console il nuovo progetto 'Pizzeria Nuova Aurora'.
 
-Aggiungi un web app -> 'Pizzeria Nuova Aurora App'
+Aggiungi un web app -> 'Pizzeria NA Banco'
 Registrata app 
 Copia ed incollato codice proposto dalla registrazione
 
@@ -26,15 +26,13 @@ Hosting URL: https://pizzeria-nuova-aurora.web.app
 Nella barra in alto è apparsa un'icona/bottone stile 'download', 
 premuta la quale è apparso il messaggio di richista di installazione dell'app - oppure
 la richiesta di inserimento icone su desktop.
-Premuto 'xxxx' è cominciata l'installazione sul cell.
-
+Premuta l'icona è cominciata l'installazione sul cell.
 
 
 Comunicazione con database
 --------------------------
 Firestore
 Condivide il DB dell'app dei clienti
-
 
 
 list() {
@@ -48,5 +46,4 @@ complete(todo) {
      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
    });
 }
-
 

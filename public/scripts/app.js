@@ -82,49 +82,24 @@ function showDlgAddToOrder(e){
     dlg.open()
 }
 
-function aggiungi1(){
-    var el = document.querySelector('#dlgAddNumero')
-    var no = Number(el.textContent)
-    no += 1
-    el.textContent = no
-}
 
-function togli1(){
-    var el = document.querySelector('#dlgAddNumero')
-    var no = el.textContent
-    if (no>1){
-        no -= 1
-        el.textContent = no
+// Mostra la dlg con i settings
+function showDlgSettings(){
+
+    console.log("[showDlgSettings]")
+    if (dlgSettings==null){
+        console.error("dlgSettings non definito!")
+        return
     }
+    // Aggiorna i dati in dlg
+    //document.querySelector('#dlgAddIdx').val = idx
+    document.querySelector('#dlgAddNumero').textContent = "1"
+    //document.querySelector('#dlgAddNome').textContent = data.nome
+    // Apre la dlg
+    //var dlg = dlgAddToOrder[0]
+    dlgSettings.open()
 }
 
-function addToOrder(e){
-    console.log("[addToOrder]")
-
-    var idx = document.querySelector('#dlgAddIdx').val
-    var articolo = listaArticoli[idx]
-    articolo['qty'] = document.querySelector('#dlgAddNumero').textContent
-
-    ordine.push(articolo)
-    // updateBadge(ordine.length)
-    updateBadge(ordine.length)
-
-    M.toast({ html:"Aggiunto all'ordine!"})
-}
-
-
-
-function updateBadge(n){
-    var n = 0
-    ordine.forEach( (value) => {
-        n += Number(value.qty)
-    })
-    var el = document.querySelector('#badge')
-    if (n < 1)
-        el.textContent = '-'
-    else
-        el.textContent = n
-}
 
 
 
@@ -135,16 +110,6 @@ function sendEmail(){
     window.location.href = "mailto:stefano.mora@libero.it?subject=" + emailSubject + "&body=" + emailBody
 }
 
-function sendWA(){
-    console.log('[sendWA]')
-    var wa = "393471418401"
-    var text = JSON.stringify(ordine); // "Prova invio messaggio da PWA"
-    // window.open("https://api.whatsapp.com/send?phone="+wa+"&text="+text)
-    window.location.href("https://api.whatsapp.com/send?phone="+wa+"&text="+text)
-
-    M.toast({html: "Ordine inviato correttamente via WA"})
-    ResetOrder()
-}
 
 
 function saveOrder(){
@@ -260,7 +225,6 @@ function getOrdini(item) {
 
         // Get Data
         var resRef = firebase.firestore().collection("ordini");
-        console.log("> Richiesta ..")
         resRef.get().then( async(orderList) => {
 
             // console.log("orderList: ", orderList)    // 
@@ -269,7 +233,6 @@ function getOrdini(item) {
                 function(order){
                     var orderData = order.data();
                     console.log(orderData)
-                    console.log(orderData.nome)
                     console.log(orderData.id)
 
                     ++nOrdini
@@ -305,68 +268,7 @@ function getOrdini(item) {
                 }
             )
 
-            console.log("Ordini: ",nOrdini)
-            console.log("nElementi: ", nElementi)
             document.querySelector('#menuTitle').textContent = "Ordini: "+nOrdini+" - Elementi: "+nElementi
-
-            /**
-            // Compone il titolo
-            document.querySelector('#menuIcon').textContent = itemSnap.data().icona
-            document.querySelector('#menuTitle').textContent = itemSnap.data().nome
-            
-            // Lista articoli
-            listaArticoli = new Array()
-
-            // Qeusti hanno un sottomenu
-            if (item=='ristorante'){
-                var r = await waitData("ristorante",'Antipasti');
-                InsertItem( r, "Antipasti")
-
-                r = await waitData("ristorante",'Dolci');
-                InsertItem( r, "Dessert")
-            }
-            else if (item=='calzoni'){
-                var r = await waitData('calzoni','calzoni');
-                InsertItem( r, 'Calzoni')
-
-                r = await waitData('calzoni','pizze alte');
-                InsertItem( r, "Pizze alte")
-
-            }
-            else if (item=='bevande'){
-                var r = await waitData('bevande','Bevande');
-                InsertItem( r, 'Bevande')
-                var r = await waitData('bevande','Dopo cena');
-                InsertItem( r, 'Dopo cena')
-                var r = await waitData('bevande','Lista dei vini');
-                InsertItem( r, 'Lista dei vini')
-            }
-            else {
-                // SubCollection 'stesso nome'
-                resRef.doc(item).collection(item).get().then( (subitemSnap) => {
-                    var idx = 0
-                    subitemSnap.forEach( (subitem) => {
-                        // console.log(subitem.data()) // Elemento
-                        var data = subitem.data()
-                        listaArticoli.push(data)
-
-                        // Duplica l'elemento 'template'
-                        var newEl = document.querySelector('#template').cloneNode(true);
-                        newEl.classList.add('itemAdded')
-                        newEl.setAttribute('idx', idx.toString())
-                        newEl.onclick = showDlgAddToOrder
-                        newEl.querySelector('#templateTitle').textContent = data.nome
-                        newEl.querySelector('#templateDesc').textContent = data.ingredienti
-                        newEl.querySelector('#templatePrice').innerHTML = "&euro; "+data.prezzo.toFixed(2)
-                        newEl.style.display='block'
-                        document.querySelector('#mainList').appendChild(newEl);
-                        ++idx;
-                    })
-
-                    // console.log(listaArticoli)
-                })
-            }
-            */
         })
     } catch (e) {
         console.error(e)

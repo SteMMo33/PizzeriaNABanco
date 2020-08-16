@@ -35,6 +35,7 @@
   font-size: 20px;  -ms-flex-item-align: center;  -ms-grid-row-align: center;
   align-self: center; margin-left: 55px;'>
     <p>Pizzeria NUOVA AURORA BANCO
+      <i class="small material-icons" onclick="showDlgSettings()">settings</i>
     </p>
   </div>
   </header>
@@ -104,55 +105,6 @@
   </div>
   </div>
 
-  <!-- Pagina ordine -->
-  <div id='pageOrdine' style='display:none' class='page'>
-        
-    <div class="container">
-
-      <ul class="collection with-header" id='mainListOrdine'>
-
-          <li class="collection-item pink white-text">
-            <i id='menuIcon' class="material-icons">format_list_bulleted</i>
-            <span id='menuTitle' style='text-align: center;font-weight: 700;'>ORDINE</span>
-          </li>
-          
-          <!-- Template Ordine -->
-          <li class="collection-item" id="templateOrdine" style="display:none">
-            <div>
-              <table><tbody>
-                <tr style='border:none'>
-                <td>
-                  <span id='templateOrdineTitle' style='font-weight: 700;'>{{item.title}}</span>
-                </td>
-                <td class="secondary-content" id='templateOrdineNo' 
-                  style='width: 72px; text-align: right; font-weight: 800;font-size:20px; float:none'>${{N}}
-                </td>
-              </tr>
-            </tbody>
-            </table>
-            </div>
-          </li>
-
-      </ul>
-  </div>
- 
-  <div class="row" style="width: 85%; text-align: lefts;">
-    <div class="input-field" id='totaleOrdine'></div>
-  </div>
-
-  <div class="row" style="width: 85%; text-align: center;">
-	<div class="input-field">
-	  <input placeholder="Inserire il nome" id="orderName" type="text" class="validate">
-	  <label for="first_name">Nome</label>
-	</div>
-
-	<a class="waves-effect waves-light btn-large" onclick="saveOrder()">
-    <i class="material-icons right">cloud</i>Invia ordine</a>
-    
-</div>
-
-  </div>
-
 
   <!-- Modal Dlg Structure -->
   <div id="dlgAddItem" class="modal">
@@ -174,7 +126,23 @@
     </div>
   </div>
 
-    
+
+    <!-- Modal Dlg Structure -->
+    <div id="dlgSettings" class="modal">
+      <div class="modal-content">
+        <h6>Configurazione:</h6>
+        <div style='font-size:25px'>
+          <div><label>Pizze</label><input type='checkbox'></div>
+          <div><label>Birre</label><input type='checkbox'></div>
+          <div><label>Ristorante</label><input type='checkbox'></div>
+        </div>
+
+      <div class="modal-footer">
+        <a href="#!" onclick='addToOrder(event)' class="modal-close waves-effect waves-green btn-flat">Aggiungi</a>
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Annulla</a>
+      </div>
+    </div>
+  
 <!-- Add the install script here -->
 <script src="/scripts/install.js"></script>
 <!-- <script src="/scripts/menu.js"></script> -->
@@ -186,10 +154,15 @@
 
 // Materialize - Modal
 var dlgAddToOrder
+var dlgSettings
+
 document.addEventListener('DOMContentLoaded', function() {
-    var elems = document.querySelectorAll('.modal');
+    var elem = document.querySelector('#dlgAddItem');
     var options = {}
-    dlgAddToOrder = M.Modal.init(elems, options);
+    dlgAddToOrder = M.Modal.init(elem, options);
+    //
+    elem = document.querySelector('#dlgSettings');
+    dlgSettings = M.Modal.init(elem, options);
 });
 
 // Register service worker.
