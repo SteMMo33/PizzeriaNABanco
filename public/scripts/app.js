@@ -298,7 +298,8 @@ function getOrdini(item) {
                             newEl.style.display='block'
                             document.querySelector('#mainList').appendChild(newEl);
 
-                            ++nElementi;
+                            var n = Number(elemento.qty)
+                            if (!isNaN(n)) nElementi += n
                         }
                     )
                 }
