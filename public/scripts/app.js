@@ -28,61 +28,6 @@ function showContatti()
 }
 
 
-function showOrdine()
-{
-    console.log('showOrdine')
-    if (ordine.length==0){
-        M.toast({html: "Nessun elemento in ordine"})
-        return
-    }
-    // Svuota eventuale lista precedente
-    document.querySelectorAll('.addedOrder').forEach( e => e.remove())
-    // Riempie la pagina Ordine
-    var template = document.querySelector('#templateOrdine');
-    var list = document.querySelector('#mainListOrdine');
-    var totaleDiv = document.querySelector('#totaleOrdine');
-
-    totaleOrdine = 0;
-    ordine.forEach( function( val, idx){
-        var newSub = document.querySelector('#templateOrdine').cloneNode(true);
-        newSub.style.display='block'
-        newSub.classList.add('addedOrder')
-        newSub.querySelector('#templateOrdineTitle').textContent = val.nome
-        newSub.querySelector('#templateOrdineNo').textContent = val.qty
-        document.querySelector('#mainListOrdine').appendChild(newSub)
-        totaleOrdine += Number(val.qty)*Number(val.prezzo)
-    })
-    totaleDiv.innerHTML = "Totale ordine: <b>&euro; "+totaleOrdine.toFixed(2)+"</b>"
-
-    // Mostra pagina
-    document.getElementById('pageOrdine').style.display='block';
-    document.getElementById('pageHome').style.display='none';
-}
-
-// Mostra la dlg con la richiesta della quantità
-function showDlgAddToOrder(e){
-
-    console.log("[showDlgAddToOrder]")
-    if (dlgAddToOrder==null){
-        console.error("dlgAddToOrder non definito!")
-        return
-    }
-    var p = e.srcElement.parentElement
-    while(p.tagName!='LI'){
-        p = p.parentElement
-    }
-    var idx = p.getAttribute('idx')
-    var data = listaArticoli[idx]
-    // Aggiorna i dati in dlg
-    document.querySelector('#dlgAddIdx').val = idx
-    document.querySelector('#dlgAddNumero').textContent = "1"
-    document.querySelector('#dlgAddNome').textContent = data.nome
-    // Apre la dlg
-    var dlg = dlgAddToOrder[0]
-    dlg.open()
-}
-
-
 // Mostra la dlg con i settings
 function showDlgSettings(){
 
@@ -179,36 +124,8 @@ async function getData()  {
 }
 
 
-function waitData(submenu, item) {
-    return firebase.firestore().collection("menu").doc(submenu).collection(item).get()
-}
-
-function InsertItem(datalist, item){
-    // Titolo pagina
-    console.log(item)
-    if (item){
-        var newSub = document.querySelector('#templateMenu').cloneNode(true);
-        newSub.classList.add('itemAdded')
-        newSub.querySelector('#submenuTitle').textContent = item
-        newSub.style.display='block'
-        document.querySelector('#mainList').appendChild(newSub);
-    }
-
-    datalist.forEach( dataraw => {
-        var data = dataraw.data()
-        // In Memoria
-        var idx = listaArticoli.push(data) -1
-        // A video
-        var newEl = document.querySelector('#template').cloneNode(true);
-        newEl.classList.add('itemAdded')
-        newEl.setAttribute('idx', idx.toString())
-        newEl.onclick = showDlgAddToOrder
-        newEl.querySelector('#templateTitle').textContent = data.nome
-        newEl.querySelector('#templateDesc').textContent = data.ingredienti
-        newEl.querySelector('#templatePrice').innerHTML = "&euro; "+data.prezzo.toFixed(2)
-        newEl.style.display='block'
-        document.querySelector('#mainList').appendChild(newEl);
-    })
+function saveCfg() {
+    console.log("[saveCfg] TODO")
 }
 
 
@@ -246,7 +163,6 @@ function getOrdini(item) {
                     var objOrdine = JSON.parse(jsonOrder)
                     objOrdine.ordine.forEach(
                         function(elemento){
-                            console.log(elemento.nome)
 
                             // Duplica l'elemento 'template'
                             var newEl = document.querySelector('#template').cloneNode(true);
@@ -254,8 +170,8 @@ function getOrdini(item) {
                             // newEl.setAttribute('idx', idx.toString())
                             // newEl.onclick = showDlgAddToOrder
                             newEl.querySelector('#templateTitle').textContent = elemento.nome
-                            newEl.querySelector('#templateDesc').textContent = orderData.nome + " - " + orderData.data.toDate()
-                            //newEl.querySelector('#templatePrice').innerHTML = "&euro; "+data.prezzo.toFixed(2)
+                            var d = orderData.data.toDate().toLocaleString()
+                            newEl.querySelector('#templateDesc').textContent = orderData.nome + " - " + d
                             newEl.querySelector('#templatePrice').innerHTML = elemento.qty
 
                             newEl.style.display='block'
