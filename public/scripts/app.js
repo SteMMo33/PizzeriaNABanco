@@ -48,14 +48,6 @@ function showDlgSettings(){
 
 
 
-function sendEmail(){
-    console.log('[sendEmail]')
-    emailSubject = "Ordine Nuova Aurora"
-    emailBody = "Ordine:\n1 cipolle + origano\n1 vetegale\n\nGrazie\n\n"
-    window.location.href = "mailto:stefano.mora@libero.it?subject=" + emailSubject + "&body=" + emailBody
-}
-
-
 
 function saveOrder(){
     console.log('[saveOrder]', ordine)
@@ -83,7 +75,6 @@ function saveOrder(){
          function(){
             console.log("[saveOrder] OK")
             M.toast({html: "Ordine inviato correttamente"})
-            setTimeout( function(){ResetOrder(); showHome('pizze')}, 4000);
          }
       )
       .catch(
@@ -95,11 +86,6 @@ function saveOrder(){
 }
 
 
-function ResetOrder() {
-    // Reset lista
-    ordine = new Array()
-    updateBadge(0)
-}
 
 async function getData()  {
     console.log("getData")
@@ -121,11 +107,6 @@ async function getData()  {
             errorMsg: "Something went wrong. Please Try Again."
         }
     }
-}
-
-
-function saveCfg() {
-    console.log("[saveCfg] TODO")
 }
 
 
@@ -167,9 +148,8 @@ function getOrdini(item) {
                             // Duplica l'elemento 'template'
                             var newEl = document.querySelector('#template').cloneNode(true);
                             newEl.classList.add('itemAdded')
-                            // newEl.setAttribute('idx', idx.toString())
-                            // newEl.onclick = showDlgAddToOrder
                             newEl.querySelector('#templateTitle').textContent = elemento.nome
+                            
                             var d = orderData.data.toDate().toLocaleString()
                             newEl.querySelector('#templateDesc').textContent = orderData.nome + " - " + d
                             newEl.querySelector('#templatePrice').innerHTML = elemento.qty

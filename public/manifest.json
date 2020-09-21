@@ -1,6 +1,6 @@
 {
-    "name": "Pizzeria Nuova Aurora",
-    "short_name": "Pizzeria Nuova Aurora",
+    "name": "Pizzeria NA Banco",
+    "short_name": "Nuova Aurora Banco",
     "icons": [{
       "src": "/images/icons/logo128.png",
         "sizes": "128x128",
@@ -30,5 +30,7 @@
     "display": "standalone",
     "background_color": "#3E4EB8",
     "theme_color": "#2F3BA2",
-    "orientation": "portrait"
+    "orientation": "landscape",
+
+    "gcm_sender_id": "563548335074"
   }

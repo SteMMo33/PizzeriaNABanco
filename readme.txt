@@ -17,10 +17,11 @@ Nella cartella pwa ho eseguito:
 ** Avrebbe creato dei files iniziali
 * Cambiato il valore di 'default' in .firebaserc perchè puntava ad altro progetto
 * firebase deploy
+firebase deploy --only hosting:pizzeria-na-banco
 
 
 Project Console: https://console.firebase.google.com/project/pizzeria-nuova-aurora/overview
-Hosting URL: https://pizzeria-nuova-aurora.web.app
+Hosting URL: https://pizzeria-na-banco.web.app
 
 
 Nella barra in alto è apparsa un'icona/bottone stile 'download', 
@@ -46,4 +47,17 @@ complete(todo) {
      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
    });
 }
+
+
+
+Push notification
+-----------------
+L'applicazione deve poter ricevere notifiche di nuovi inserimenti di ordini attraverso
+il meccanismo del Push notification.
+
+Articolo:
+https://www.codemag.com/Article/1901031/Implementing-Push-Notifications-in-Progressive-Web-Apps-PWAs-Using-Firebase
+
+
+https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications
 
