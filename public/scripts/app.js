@@ -131,7 +131,7 @@ function getOrdini(item) {
                 function(order){
                     var orderData = order.data();
                     console.log(orderData)
-                    console.log(orderData.id)
+                    console.log(orderData.servito)
 
                     ++nOrdini
 
@@ -140,31 +140,32 @@ function getOrdini(item) {
                         jsonOrder = "{\"ordine\":[{\"nome\":\"Problema nei dati\",\"qty\":\"-\"}]}"
                     if(jsonOrder.startsWith("["))
                         jsonOrder = "{\"ordine\":"+jsonOrder+"}"
+
+                    // Duplica l'elemento 'template'
+                    var newEl = document.querySelector('#template').cloneNode(true);
+                    newEl.classList.add('itemAdded')
+
+                    var d = orderData.data.toDate().toLocaleString()
+                    newEl.querySelector('#templateTitle').textContent = orderData.nome + " @ " + d
+
+                    newEl.querySelector('#templatePrice').innerHTML = "18:20"
+
                     // console.log("json: ",jsonOrder)
                     var objOrdine = JSON.parse(jsonOrder)
                     objOrdine.ordine.forEach(
                         function(elemento){
-
-                            // Duplica l'elemento 'template'
-                            var newEl = document.querySelector('#template').cloneNode(true);
-                            newEl.classList.add('itemAdded')
-                            newEl.querySelector('#templateTitle').textContent = elemento.nome
-                            
-                            var d = orderData.data.toDate().toLocaleString()
-                            newEl.querySelector('#templateDesc').textContent = orderData.nome + " - " + d
-                            newEl.querySelector('#templatePrice').innerHTML = elemento.qty
-
-                            newEl.style.display='block'
-                            document.querySelector('#mainList').appendChild(newEl);
-
-                            var n = Number(elemento.qty)
-                            if (!isNaN(n)) nElementi += n
+        
+                            var row = newEl.querySelector('#templateDesc').cloneNode(true)
+                            row.textContent = " - " + elemento.nome + " x " + elemento.qty
+                            newEl.appendChild(row)
                         }
                     )
+                    newEl.style.display='block'
+                    document.querySelector('#mainList').appendChild(newEl);
                 }
             )
 
-            document.querySelector('#menuTitle').textContent = "Ordini: "+nOrdini+" - Elementi: "+nElementi
+            document.querySelector('#menuTitle').textContent = "Ordini: "+nOrdini
         })
     } catch (e) {
         console.error(e)

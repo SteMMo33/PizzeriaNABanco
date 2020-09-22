@@ -59,5 +59,33 @@ Articolo:
 https://www.codemag.com/Article/1901031/Implementing-Push-Notifications-in-Progressive-Web-Apps-PWAs-Using-Firebase
 
 
+--
+
 https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications
 
+The Web Push Protocol
+Let's look at how to send a push message to the browser using the Web Push Protocol.
+
+Server key: AAAAgzYZK-I:APA91bGyrlD3xJ1jNjNYcYGavCPskow9n7CSw0YtlrbEp84DrUD_XZ96U8dPB0ajD6D3XK352MXsh6Tk1rr0_yx9i3oX_pIz-_vuPleWHll0zjlTQfu-GW1YA4xQ7LhTlZedbv2NPMZd
+Sender ID: 563548335074
+
+Sending a Message Using cURL
+----------------------------
+The cURL command that sends a request to FCM to issue a push message looks like this:
+
+curl "ENDPOINT_URL" --request POST --header "TTL: 60" --header "Content-Length: 0" \
+--header "Authorization: key=SERVER_KEY"
+
+For example:
+
+curl "https://android.googleapis.com/gcm/send/fYFVeJQJ2CY:APA91bGrFGRmy-sY6NaF8a...gls7HZcwJL4 \
+LFxjg0y0-ksEhKjpeFC5P" --request POST --header "TTL: 60" --header "Content-Length: 0" \
+ --header "Authorization: key=AIzaSyD1JcZ8WM1vTtH6Y0tXq_Pnuw4jgj_92yg"
+
+curl "https://android.googleapis.com/gcm/send/AAAAgzYZK-I:APA91bGyrlD3xJ1jNjNYcYGavCPskow9n7CSw0YtlrbEp84DrUD_XZ96U8dPB0ajD6D3XK352MXsh6Tk1rr0_yx9i3oX_pIz-_vuPleWHll0zjlTQfu-GW1YA4xQ7LhTlZedbv2NPMZd" --request POST --header "TTL: 60" --header "Content-Length: 0" \
+ --header "Authorization: key=AIzaSyD1JcZ8WM1vTtH6Y0tXq_Pnuw4jgj_92yg"
+
+
+Sending the message from the Server
+-----------------------------------
+In this section, we cover how to send a push message from the server.

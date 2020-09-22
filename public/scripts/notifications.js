@@ -15,10 +15,10 @@ function displayNotification(reg) {
    // is set, therefore it's unsafe to check for the "default" value.
    else if (window.Notification && Notification.permission !== 'denied') {
       Notification.requestPermission(status => {
-        if (status === 'granted') {
+      	if (status === 'granted') {
          	notification();
-        } else {
-          alert('You denied or dismissed permissions to notifications.');
+      	} else {
+         	alert('You denied or dismissed permissions to notifications.');
         }
       });
    } else {
@@ -33,9 +33,42 @@ function displayNotification(reg) {
 
 function notification() {
 	const options = {
-	  body: 'Testing Our Notification',
-	  icon: './bell.png'
+	  	body: 'Nuova Aurora',
+		icon: './images/icons/logo256.png',
+		vibrate: [100, 50, 100],
+		data: {
+			dateOfArrival: Date.now(),
+			primaryKey: 1
+		 },
+		 actions: [
+			{action: 'explore', title: 'Explore this new world',  icon: 'images/checkmark.png'},
+			{action: 'close', title: 'Close notification',  icon: 'images/xmark.png'},
+		 ]
+
 	};
-	swRegistration.showNotification('PWA Notification!', options);
+	swRegistration.showNotification('Ho ricevuto un ordine!', options);
 }
+ 
+
+
+function subscribeUser() {
+	if ('serviceWorker' in navigator) {
+	  	navigator.serviceWorker.ready.then(function(reg) {
+ 
+		 	reg.pushManager.subscribe({
+				userVisibleOnly: true,
+				aplicationServerKey: "BOUw3AvpYSotAI7YHDPQRieAUsGWD7ZQhCfDnCIOqHiZTdGjusvziBcr1imWDhI1Ez2UE9Lf4AwPo9lxOjoLpZM"
+		 	}).then(function(sub) {
+				console.log('Endpoint URL: ', sub.endpoint);
+			}).catch(function(e) {
+				if (Notification.permission === 'denied') {
+			  		console.warn('Permission for notifications was denied');
+				} else {
+			  		console.error('Unable to subscribe to push', e);
+				}
+		 	});
+	  	})
+	}
+}
+ 
  

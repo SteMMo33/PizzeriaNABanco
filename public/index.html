@@ -35,7 +35,7 @@
   font-size: 20px;  -ms-flex-item-align: center;  -ms-grid-row-align: center;
   align-self: center; margin-left: 55px;'>
     <p>Pizzeria NUOVA AURORA BANCO
-      <i class="small material-icons" onclick="showDlgSettings()">settings</i>
+      <i class="small material-icons right" onclick="showDlgSettings()">settings</i>
     </p>
   </div>
   </header>
@@ -47,6 +47,7 @@
           <li><a onclick="panel.close();"><i class="material-icons">local_pizza</i> Vedi solo oggi</a></li>
           <li><a onclick="panel.close();"><i class="material-icons">local_pizza</i> Vedi tutti ordini</a></li>
           <li><a onclick="panel.close();"><i class="material-icons">group</i> Contatti</a></li>
+          <li><a onclick="subscribeUser();panel.close();"><i class="material-icons">group</i> Subscribe</a></li>
         </ul>
       </div>
     </div>
@@ -85,7 +86,7 @@
               <table><tbody>
                 <tr style='border:none'>
                 
-                  <td>
+                  <td id='tdOrder'>
                     <span id='templateTitle' style='font-weight: 700;'>{{item.title}}</span>
                     <br />
                     <span class="grey-text" id='templateDesc'>{{description}}</span>
@@ -170,10 +171,24 @@ document.addEventListener('DOMContentLoaded', function() {
 // Register service worker.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-        .then((reg) => {
-          console.log('Service worker registered.', reg);
-          displayNotification(reg)
+    	navigator.serviceWorker.register('/service-worker.js')
+        	.then((reg) => {
+         	console.log('Service worker registered.', reg);
+
+				// Mostra subito
+				displayNotification(reg)
+				
+				// Controlla la subscriptio
+				reg.pushManager.getSubscription().then(function(sub) {
+					if (sub === null) {
+						// Update UI to ask user to register for Push
+						console.log('Not subscribed to push service!');
+					} else {
+						// We have a subscription, update the database
+						console.log('Subscription object: ', sub);
+					}
+				})
+
         });
   });
 }
@@ -188,9 +203,9 @@ if ('Notification' in window)
 
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-analytics.js"></script>
 
 <script>
   // Your web app's Firebase configuration
