@@ -41,8 +41,8 @@ function notification() {
 			primaryKey: 1
 		 },
 		 actions: [
-			{action: 'explore', title: 'Explore this new world',  icon: 'images/checkmark.png'},
-			{action: 'close', title: 'Close notification',  icon: 'images/xmark.png'},
+			{action: 'explore', title: 'Explore this new world',  icon: './images/logo300.jpg'},
+			{action: 'close', title: 'Close notification',  icon: 'images/icons/logo180.png'},
 		 ]
 
 	};
@@ -57,9 +57,10 @@ function subscribeUser() {
  
 		 	reg.pushManager.subscribe({
 				userVisibleOnly: true,
-				aplicationServerKey: "BOUw3AvpYSotAI7YHDPQRieAUsGWD7ZQhCfDnCIOqHiZTdGjusvziBcr1imWDhI1Ez2UE9Lf4AwPo9lxOjoLpZM"
+				applicationServerKey: "BOUw3AvpYSotAI7YHDPQRieAUsGWD7ZQhCfDnCIOqHiZTdGjusvziBcr1imWDhI1Ez2UE9Lf4AwPo9lxOjoLpZM"
 		 	}).then(function(sub) {
-				console.log('Endpoint URL: ', sub.endpoint);
+				console.log('> Subscription: ', JSON.stringify(sub));
+				console.log('> Endpoint URL: ', sub.endpoint);
 			}).catch(function(e) {
 				if (Notification.permission === 'denied') {
 			  		console.warn('Permission for notifications was denied');

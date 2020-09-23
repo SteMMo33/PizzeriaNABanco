@@ -33,7 +33,7 @@ window.addEventListener('notificationclick', function(e) {
 
 
 
-self.addEventListener('push', function(e) {
+window.addEventListener('push', function(e) {
 	console.log("> push")
 	  
 	var body;

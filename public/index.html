@@ -178,7 +178,7 @@ if ('serviceWorker' in navigator) {
 				// Mostra subito
 				displayNotification(reg)
 				
-				// Controlla la subscriptio
+				// Controlla la subscription
 				reg.pushManager.getSubscription().then(function(sub) {
 					if (sub === null) {
 						// Update UI to ask user to register for Push
