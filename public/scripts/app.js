@@ -46,6 +46,10 @@ function showDlgSettings(){
 }
 
 
+function showOrderDlg(){
+    console.log("[showOrderDlg]")
+}
+
 
 
 function sendEmail(){
@@ -130,8 +134,8 @@ function saveCfg() {
 
 
 
-function getOrdini(item) {
-    console.log("[+getOrdini] "+item)
+function getOrdini() {
+    console.log("[+getOrdini] ")
     // Elimina elementi aggiunti precedentemente
     document.querySelectorAll('.itemAdded').forEach( e => e.remove())
 
@@ -142,16 +146,16 @@ function getOrdini(item) {
 
         // Get Data
         var resRef = firebase.firestore().collection("ordini");
-        resRef.get().then( async(orderList) => {
+        resRef.get().then( /*async*/ (orderList) => {
 
-            // console.log("orderList: ", orderList)    // 
+            // console.log("orderList: ", orderList    // Nulla di leggibile
 
             orderList.forEach(
                 function(order){
+                    //console.log("ID: ", order.getId())
+
                     var orderData = order.data();
                     console.log(orderData)
-                    console.log(orderData.id)
-
                     ++nOrdini
 
                     var jsonOrder = orderData.ordine
@@ -162,23 +166,33 @@ function getOrdini(item) {
                     // console.log("json: ",jsonOrder)
                     var objOrdine = JSON.parse(jsonOrder)
                     objOrdine.ordine.forEach(
-                        function(elemento){
+                        function(elemento){     // Per ogni elemento dell'ordine
+                            console.log("elemento: ", elemento)
+                            //console.log(firebase.firestore.FieldPath.documentId())
 
-                            // Duplica l'elemento 'template'
-                            var newEl = document.querySelector('#template').cloneNode(true);
-                            newEl.classList.add('itemAdded')
-                            // newEl.setAttribute('idx', idx.toString())
-                            // newEl.onclick = showDlgAddToOrder
-                            newEl.querySelector('#templateTitle').textContent = elemento.nome
-                            var d = orderData.data.toDate().toLocaleString()
-                            newEl.querySelector('#templateDesc').textContent = orderData.nome + " - " + d
-                            newEl.querySelector('#templatePrice').innerHTML = elemento.qty
+                            if (typeof elemento.tipo === 'undefined')
+                                return
+
+                            // Se l'elemento è una pizza lo inserisce in lista
+                            if (elemento.tipo === 'pizze' || elemento.tipo === 'speciali'){
+
+                                // Duplica l'elemento 'template'
+                                var newEl = document.querySelector('#template').cloneNode(true);
+                                newEl.classList.add('itemAdded')
+                                newEl.setAttribute('idx', "11112")
+                                newEl.onclick = showOrderDlg
+                            newEl.querySelector('#templateRow').textContent = nOrdini
+                            newEl.querySelector('#templateTitle').textContent = elemento.qty + " x " + elemento.nome
+                            // var d = orderData.data.toDate().toLocaleString()
+                            // newEl.querySelector('#templateDesc').textContent = orderData.nome + " - " + d
+                            newEl.querySelector('#templatePrice').innerHTML = orderData.consegnaOra
 
                             newEl.style.display='block'
                             document.querySelector('#mainList').appendChild(newEl);
 
                             var n = Number(elemento.qty)
                             if (!isNaN(n)) nElementi += n
+                            }
                         }
                     )
                 }
