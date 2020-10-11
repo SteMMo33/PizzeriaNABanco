@@ -139,11 +139,11 @@ function getOrdini() {
 
             orderList.forEach(
                 function(order){
-                    //console.log("ID: ", order.getId())
+                    console.log("id: "+order.id)
 
                     var orderData = order.data();
                     console.log(orderData)
-                    console.log(orderData.servito)
+                    console.log("servito: "+orderData.servito)
 
                     ++nOrdini
 
@@ -153,14 +153,6 @@ function getOrdini() {
                     if(jsonOrder.startsWith("["))
                         jsonOrder = "{\"ordine\":"+jsonOrder+"}"
 
-                    // Duplica l'elemento 'template'
-                    var newEl = document.querySelector('#template').cloneNode(true);
-                    newEl.classList.add('itemAdded')
-
-                    var d = orderData.data.toDate().toLocaleString()
-                    newEl.querySelector('#templateTitle').textContent = orderData.nome + " @ " + d
-
-                    newEl.querySelector('#templatePrice').innerHTML = "18:20"
 
                     // console.log("json: ",jsonOrder)
                     var objOrdine = JSON.parse(jsonOrder)
@@ -170,9 +162,9 @@ function getOrdini() {
                             console.log("elemento: ", elemento)
                             //console.log(firebase.firestore.FieldPath.documentId())
 
-                            var row = newEl.querySelector('#templateDesc').cloneNode(true)
-                            row.textContent = " - " + elemento.nome + " x " + elemento.qty
-                            newEl.appendChild(row)
+                            //var row = newEl.querySelector('#templateDesc').cloneNode(true)
+                            //row.textContent = " - " + elemento.nome + " x " + elemento.qty
+                            //newEl.appendChild(row)
 
                             if (typeof elemento.tipo === 'undefined')
                                 return
@@ -183,24 +175,22 @@ function getOrdini() {
                                 // Duplica l'elemento 'template'
                                 var newEl = document.querySelector('#template').cloneNode(true);
                                 newEl.classList.add('itemAdded')
-                                newEl.setAttribute('idx', "11112")
+                                newEl.setAttribute('idx', order.id)
                                 newEl.onclick = showOrderDlg
-                            newEl.querySelector('#templateRow').textContent = nOrdini
-                            newEl.querySelector('#templateTitle').textContent = elemento.qty + " x " + elemento.nome
+                                newEl.querySelector('#templateRow').textContent = nOrdini
+                                newEl.querySelector('#templateTitle').textContent = elemento.qty + " x " + elemento.nome
                             // var d = orderData.data.toDate().toLocaleString()
                             // newEl.querySelector('#templateDesc').textContent = orderData.nome + " - " + d
-                            newEl.querySelector('#templatePrice').innerHTML = orderData.consegnaOra
+                                newEl.querySelector('#templatePrice').innerHTML = orderData.consegnaOra
 
-                            newEl.style.display='block'
-                            document.querySelector('#mainList').appendChild(newEl);
+                                newEl.style.display='block'
+                                document.querySelector('#mainList').appendChild(newEl);
 
-                            var n = Number(elemento.qty)
-                            if (!isNaN(n)) nElementi += n
+                                var n = Number(elemento.qty)
+                                if (!isNaN(n)) nElementi += n
                             }
                         }
                     )
-                    newEl.style.display='block'
-                    document.querySelector('#mainList').appendChild(newEl);
                 }
             )
 
