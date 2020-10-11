@@ -75,6 +75,7 @@ function saveOrder(){
          function(){
             console.log("[saveOrder] OK")
             M.toast({html: "Ordine inviato correttamente"})
+            // setTimeout( function(){ResetOrder(); showHome('pizze')}, 4000);
          }
       )
       .catch(
@@ -86,6 +87,11 @@ function saveOrder(){
 }
 
 
+function ResetOrder() {
+    // Reset lista
+    ordine = new Array()
+    updateBadge(0)
+}
 
 async function getData()  {
     console.log("getData")
