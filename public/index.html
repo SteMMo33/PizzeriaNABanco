@@ -86,13 +86,13 @@
               <table><tbody>
                 <tr style='border:none'>
                   <td class="secondary-content" id='templateRow' 
-                    style='width: 50px; text-align:center; font-weight: 800;font-size:24px; float:none'>
+                    style='width: 50px; text-align:center; font-weight: 800;font: size 1.2em; float:none'>
                   </td>
                 <td>
                   <span id='templateTitle' style='font-weight: 700;'></span>
                 </td>
                 <td class="secondary-content" id='templatePrice' 
-                  style='width: 72px; text-align: right; font-weight: 800;font-size:28px; float:none'>
+                  style='width: 72px; text-align: right; font-weight: 800;font-size:1.3em; float:none'>
                 </td>
                 </tr>
               </tbody>
@@ -108,7 +108,7 @@
   <!-- Modal Dlg Structure -->
   <div id="dlgItemActions" class="modal">
     <div class="modal-content">
-      <h3>ORDINE</h3>
+      <h4>ORDINE</h4>
       <h5 id='txtDlgNome1' style='color:blue; font-weight: 700;'>NOME: <span id='txtDlgNome'>Nome</span></h5>
       <h5 id='txtDlgOrdine' style='color:red'>Ordine</h5>
 
@@ -116,15 +116,15 @@
 
       <p style='text-align: center;'>
 
-        <a class='waves-effect waves-light btn-large' onclick='doNotifica()' style='margin:30px'>
+        <a class='waves-effect waves-light btn' onclick='doNotifica()' style='margin:1.1em'>
           Avvia avviso  <i id='menuIcon' class="large material-icons">notifications_active</i>
         </a>
 
-        <a class='waves-effect waves-light btn-large' onclick='alert("Chiudi")' style='margin:30px'>
+        <a class='waves-effect waves-light btn' onclick='alert("Chiudi")' style='margin:1.1em'>
           Chiudi ordine <i id='menuIcon' class="large material-icons">check</i>
         </a>
         
-        <a class='waves-effect waves-light btn-large' onclick='doPrint()' style='margin:30px'>
+        <a class='waves-effect waves-light btn' onclick='doPrint()' style='margin:1.1em'>
           Stampa scontrino <i id='menuIcon' class="large material-icons">local_printshop</i>
         </a>
 
@@ -183,22 +183,23 @@ document.addEventListener('DOMContentLoaded', function() {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     	navigator.serviceWorker.register('/service-worker.js')
-        	.then((reg) => {
-         	console.log('Service worker registered.', reg);
+        .then((reg) => {
+            console.log('Service worker registered.', reg);
 
-				// Mostra subito
-				displayNotification(reg)
-				
-				// Controlla la subscription
-				reg.pushManager.getSubscription().then(function(sub) {
-					if (sub === null) {
-						// Update UI to ask user to register for Push
-						console.log('Not subscribed to push service!');
-					} else {
-						// We have a subscription, update the database
-						console.log('Subscription object: ', sub);
-					}
-				})
+            // Mostra subito
+            // displayNotification(reg)
+            storeRegistr(reg)
+            
+            // Controlla la subscription
+            reg.pushManager.getSubscription().then(function(sub) {
+              if (sub === null) {
+                // Update UI to ask user to register for Push
+                console.log('Not subscribed to push service!');
+              } else {
+                // We have a subscription, update the database
+                console.log('Subscription object: ', sub);
+              }
+            })
 
         });
   });

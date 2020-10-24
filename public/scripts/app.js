@@ -59,6 +59,7 @@ function showOrderDlg(e){
         el = el.parentElement
         nm = el.nodeName
         console.log(nm)
+        if (nm=='HTML') return  // Non trovato
     }
     var idOrdine = el.getAttribute('idx')
     console.log("idOrdine: ", idOrdine)
@@ -174,11 +175,11 @@ function getOrdini() {
 
             orderList.forEach(
                 function(order){
-                    console.log("id: "+order.id)
+                    // console.log("id: "+order.id)
 
                     var orderData = order.data();
                     console.log(orderData)
-                    console.log("servito: "+orderData.servito)
+                    // console.log("servito: "+orderData.servito)
 
                     // Inserisce in lista con chiave id
                     orders[order.id]= orderData
@@ -197,10 +198,6 @@ function getOrdini() {
                         function(elemento){     // Per ogni elemento dell'ordine
                             console.log("elemento: ", elemento)
                             //console.log(firebase.firestore.FieldPath.documentId())
-
-                            //var row = newEl.querySelector('#templateDesc').cloneNode(true)
-                            //row.textContent = " - " + elemento.nome + " x " + elemento.qty
-                            //newEl.appendChild(row)
 
                             if (typeof elemento.tipo === 'undefined')
                                 return
@@ -250,6 +247,7 @@ function doPrint(){
 function doNotifica(){
     var idxOrder = document.querySelector('#dlgIdxOrder').value
     alert("Notify "+idxOrder)
+    displayNotification()
 }
 
 function init() {
