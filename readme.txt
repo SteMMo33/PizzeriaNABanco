@@ -89,3 +89,19 @@ curl "https://android.googleapis.com/gcm/send/AAAAgzYZK-I:APA91bGyrlD3xJ1jNjNYcY
 Sending the message from the Server
 -----------------------------------
 In this section, we cover how to send a push message from the server.
+
+---
+
+PWA con notifiche da pizzeria
+
+https://github.com/dotnet-presentations/blazor-workshop/blob/master/docs/09-progressive-web-app.md
+
+https://www.pushpro.io/blog/pwa-push-notifications-for-progressive-web-apps
+
+
+---
+
+Multihost
+
+https://fireship.io/lessons/deploy-multiple-sites-to-firebase-hosting/
+

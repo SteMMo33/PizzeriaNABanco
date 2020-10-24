@@ -106,21 +106,32 @@
 
 
   <!-- Modal Dlg Structure -->
-  <div id="dlgAddItem" class="modal">
+  <div id="dlgItemActions" class="modal">
     <div class="modal-content">
-      <h6>Aggiungi l'articolo:</h6>
-      <h5 id='dlgAddNome' style='color:red'>Nome</h5>
-      <input type='hidden' id='dlgAddIdx'>
-      <h1 style='text-align: center;color: red;padding: 20px 0' id='dlgAddNumero'>1</h1>
+      <h3>ORDINE</h3>
+      <h5 id='txtDlgNome1' style='color:blue; font-weight: 700;'>NOME: <span id='txtDlgNome'>Nome</span></h5>
+      <h5 id='txtDlgOrdine' style='color:red'>Ordine</h5>
+
+      <input type='hidden' id='dlgIdxOrder'>
+
       <p style='text-align: center;'>
-        <span onclick='aggiungi1()' style='padding: 5px 12px'>
-          <i id='menuIcon' class="large material-icons">add_circle</i></span>
-        <span onclick='togli1()' style='padding: 5px 12px'>
-          <i id='menuIcon' class="large material-icons">do_not_disturb_on</i></span>
+
+        <a class='waves-effect waves-light btn-large' onclick='doNotifica()' style='margin:30px'>
+          Avvia avviso  <i id='menuIcon' class="large material-icons">notifications_active</i>
+        </a>
+
+        <a class='waves-effect waves-light btn-large' onclick='alert("Chiudi")' style='margin:30px'>
+          Chiudi ordine <i id='menuIcon' class="large material-icons">check</i>
+        </a>
+        
+        <a class='waves-effect waves-light btn-large' onclick='doPrint()' style='margin:30px'>
+          Stampa scontrino <i id='menuIcon' class="large material-icons">local_printshop</i>
+        </a>
+
       </p>
+
     </div>
     <div class="modal-footer">
-      <a href="#!" onclick='addToOrder(event)' class="modal-close waves-effect waves-green btn-flat">Aggiungi</a>
       <a href="#!" class="modal-close waves-effect waves-green btn-flat">Annulla</a>
     </div>
   </div>
@@ -155,13 +166,14 @@
 <script>
 
 // Materialize - Modal
-var dlgAddToOrder
+var dlgItemActions
 var dlgSettings
 
 document.addEventListener('DOMContentLoaded', function() {
-    var elem = document.querySelector('#dlgAddItem');
+    //
+    var elem = document.querySelector('#dlgItemActions');
     var options = {}
-    dlgAddToOrder = M.Modal.init(elem, options);
+    dlgItemActions = M.Modal.init(elem, options);
     //
     elem = document.querySelector('#dlgSettings');
     dlgSettings = M.Modal.init(elem, options);
@@ -202,9 +214,9 @@ if ('Notification' in window)
 
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-analytics.js"></script>
 
 <script>
   // Your web app's Firebase configuration

@@ -1,6 +1,6 @@
 
-var ordine = new Array()
-var listaArticoli = new Array()
+var ordine = new Array();
+var orders = new Array();
 var totaleOrdine = 0
 
 /*
@@ -39,15 +39,51 @@ function showDlgSettings(){
     // Aggiorna i dati in dlg
     //document.querySelector('#dlgAddIdx').val = idx
     document.querySelector('#dlgAddNumero').textContent = "1"
-    //document.querySelector('#dlgAddNome').textContent = data.nome
+
     // Apre la dlg
-    //var dlg = dlgAddToOrder[0]
     dlgSettings.open()
 }
 
 
-function showOrderDlg(){
-    console.log("[showOrderDlg]")
+function showOrderDlg(e){
+    console.log("[showOrderDlg]", e)
+    if (dlgItemActions==null){
+        console.error("dlgItemActions non definito!")
+        return
+    }
+    // Cerca il dato idx dell'elemento LI parente
+    var el = e.srcElement.parentNode
+    console.log(el)
+    nm = el.nodeName
+    while(nm != 'LI'){
+        el = el.parentElement
+        nm = el.nodeName
+        console.log(nm)
+    }
+    var idOrdine = el.getAttribute('idx')
+    console.log("idOrdine: ", idOrdine)
+    var ordine = orders[idOrdine]
+    console.log("Ordine: ", ordine)
+
+    // Aggiorna i dati in dlg
+    document.querySelector('#dlgIdxOrder').value = idOrdine
+    document.querySelector('#txtDlgNome').textContent = ordine.nome
+
+    var txtOrdine = ""
+    console.log(ordine.ordine)
+    var objOrdine = JSON.parse(ordine.ordine)
+    console.log(objOrdine)
+    objOrdine.forEach(elemento => {
+        if (typeof elemento.tipo === 'undefined')
+            txtOrdine += "- "+elemento.qty+" x "+elemento.nome+"<br>"
+        else
+            txtOrdine += elemento.tipo+": <b>"+elemento.qty+" x " + elemento.nome+"</b><br>"
+    });
+    document.querySelector('#txtDlgOrdine').innerHTML = txtOrdine
+
+    // Apre la dlg
+    //var dlg = dlgAddToOrder[0]
+    dlgItemActions.open()
 }
 
 
@@ -127,7 +163,6 @@ function getOrdini() {
     document.querySelectorAll('.itemAdded').forEach( e => e.remove())
 
     try {
-        var orders = {};
         var nOrdini = 0;
         var nElementi = 0;
 
@@ -145,6 +180,8 @@ function getOrdini() {
                     console.log(orderData)
                     console.log("servito: "+orderData.servito)
 
+                    // Inserisce in lista con chiave id
+                    orders[order.id]= orderData
                     ++nOrdini
 
                     var jsonOrder = orderData.ordine
@@ -152,7 +189,6 @@ function getOrdini() {
                         jsonOrder = "{\"ordine\":[{\"nome\":\"Problema nei dati\",\"qty\":\"-\"}]}"
                     if(jsonOrder.startsWith("["))
                         jsonOrder = "{\"ordine\":"+jsonOrder+"}"
-
 
                     // console.log("json: ",jsonOrder)
                     var objOrdine = JSON.parse(jsonOrder)
@@ -205,6 +241,16 @@ function getOrdini() {
     console.log("[-getOrdini]")
 }
 
+
+function doPrint(){
+    var idxOrder = document.querySelector('#dlgIdxOrder').value
+    alert("Print "+idxOrder)
+}
+
+function doNotifica(){
+    var idxOrder = document.querySelector('#dlgIdxOrder').value
+    alert("Notify "+idxOrder)
+}
 
 function init() {
     console.log('init')
