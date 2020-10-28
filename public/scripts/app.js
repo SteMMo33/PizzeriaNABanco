@@ -24,7 +24,7 @@ function showContatti()
     console.log('showContatti')
     document.getElementById('pageContatti').style.display='block';
     document.getElementById('pageHome').style.display='none';
-    document.getElementById('pageOrdine').style.display='none';
+    //document.getElementById('pageOrdine').style.display='none';
 }
 
 
@@ -46,8 +46,46 @@ function showDlgSettings(){
 }
 
 
-function showOrderDlg(){
+function showOrderDlg(e){
     console.log("[showOrderDlg]")
+    if (dlgItemActions==null){
+        console.error("dlgItemActions non definito!")
+        return
+    }
+    // Cerca il dato idx dell'elemento LI parente
+    var el = e.srcElement.parentNode
+    console.log(el)
+    nm = el.nodeName
+    while(nm != 'LI'){
+        el = el.parentElement
+        nm = el.nodeName
+        console.log(nm)
+        if (nm=='HTML') return  // Non trovato
+    }
+    var idOrdine = el.getAttribute('idx')
+    console.log("idOrdine: ", idOrdine)
+    var ordine = orders[idOrdine]
+    console.log("Ordine: ", ordine)
+
+    // Aggiorna i dati in dlg
+    document.querySelector('#dlgIdxOrder').value = idOrdine
+    document.querySelector('#txtDlgNome').textContent = ordine.nome
+
+    var txtOrdine = ""
+    console.log(ordine.ordine)
+    var objOrdine = JSON.parse(ordine.ordine)
+    console.log(objOrdine)
+    objOrdine.forEach(elemento => {
+        if (typeof elemento.tipo === 'undefined')
+            txtOrdine += "- "+elemento.qty+" x "+elemento.nome+"<br>"
+        else
+            txtOrdine += elemento.tipo+": <b>"+elemento.qty+" x " + elemento.nome+"</b><br>"
+    });
+    document.querySelector('#txtDlgOrdine').innerHTML = txtOrdine
+
+    // Apre la dlg
+    //var dlg = dlgAddToOrder[0]
+    dlgItemActions.open()
 }
 
 
@@ -91,11 +129,6 @@ function saveOrder(){
 }
 
 
-function ResetOrder() {
-    // Reset lista
-    ordine = new Array()
-    updateBadge(0)
-}
 
 async function getData()  {
     console.log("getData")

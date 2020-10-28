@@ -46,7 +46,7 @@
         <ul class="menu__list">
           <li><a onclick="panel.close();"><i class="material-icons">local_pizza</i> Vedi solo oggi</a></li>
           <li><a onclick="panel.close();"><i class="material-icons">local_pizza</i> Vedi tutti ordini</a></li>
-          <li><a onclick="panel.close();"><i class="material-icons">group</i> Contatti</a></li>
+          <li><a onclick="showContatti();panel.close();"><i class="material-icons">group</i> Contatti</a></li>
           <li><a onclick="subscribeUser();panel.close();"><i class="material-icons">group</i> Subscribe</a></li>
         </ul>
       </div>
@@ -125,6 +125,36 @@
     </div>
   </div>
 
+<!-- Modal Dlg Structure -->
+<div id="dlgItemActions" class="modal">
+  <div class="modal-content">
+    <h4>ORDINE</h4>
+    <h5 id='txtDlgNome1' style='color:blue; font-weight: 700;'>NOME: <span id='txtDlgNome'>Nome</span></h5>
+    <h5 id='txtDlgOrdine' style='color:red'>Ordine</h5>
+
+    <input type='hidden' id='dlgIdxOrder'>
+
+    <p style='text-align: center;'>
+
+      <a class='waves-effect waves-light btn' onclick='doNotifica()' style='margin:1.1em'>
+        Avvia avviso  <i id='menuIcon' class="large material-icons">notifications_active</i>
+      </a>
+
+      <a class='waves-effect waves-light btn' onclick='alert("Chiudi")' style='margin:1.1em'>
+        Chiudi ordine <i id='menuIcon' class="large material-icons">check</i>
+      </a>
+      
+      <a class='waves-effect waves-light btn' onclick='doPrint()' style='margin:1.1em'>
+        Stampa scontrino <i id='menuIcon' class="large material-icons">local_printshop</i>
+      </a>
+
+    </p>
+
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Annulla</a>
+  </div>
+</div>
 
     <!-- Modal Dlg Structure -->
     <div id="dlgSettings" class="modal">
@@ -170,9 +200,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Register service worker.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    	navigator.serviceWorker.register('/service-worker.js')
-        	.then((reg) => {
-         	console.log('Service worker registered.', reg);
+    navigator.serviceWorker.register('/service-worker.js').then((reg) => {
+        console.log('Service worker registered.', reg);
 
 				// Mostra subito
 				displayNotification(reg)
@@ -188,7 +217,7 @@ if ('serviceWorker' in navigator) {
 					}
 				})
 
-        });
+    });
   });
 }
 

@@ -1,6 +1,7 @@
 {
     "name": "Pizzeria NA Banco",
     "short_name": "Nuova Aurora Banco",
+    "description": "App per ricevere ordini alla Pizzeria Nuova Aurora",
     "icons": [{
       "src": "/images/icons/logo128.png",
         "sizes": "128x128",
@@ -10,7 +11,7 @@
         "sizes": "144x144",
         "type": "image/png"
       }, {
-        "src": "/images/icons/icon-152x152.png",
+        "src": "/images/icons/logo152.png",
         "sizes": "152x152",
         "type": "image/png"
       }, {
@@ -31,6 +32,8 @@
     "background_color": "#3E4EB8",
     "theme_color": "#2F3BA2",
     "orientation": "landscape",
-
+    "author": {
+      "name": "SM"
+    },
     "gcm_sender_id": "563548335074"
   }

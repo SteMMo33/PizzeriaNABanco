@@ -52,6 +52,7 @@ function notification() {
 
 
 function subscribeUser() {
+	console.log("subscribeuser")
 	if ('serviceWorker' in navigator) {
 	  	navigator.serviceWorker.ready.then(function(reg) {
  
