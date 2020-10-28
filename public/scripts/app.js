@@ -1,6 +1,6 @@
 
-var ordine = new Array()
-var listaArticoli = new Array()
+var ordine = new Array();
+var orders = new Array();
 var totaleOrdine = 0
 
 /*
@@ -39,15 +39,14 @@ function showDlgSettings(){
     // Aggiorna i dati in dlg
     //document.querySelector('#dlgAddIdx').val = idx
     document.querySelector('#dlgAddNumero').textContent = "1"
-    //document.querySelector('#dlgAddNome').textContent = data.nome
+
     // Apre la dlg
-    //var dlg = dlgAddToOrder[0]
     dlgSettings.open()
 }
 
 
 function showOrderDlg(e){
-    console.log("[showOrderDlg]")
+    console.log("[showOrderDlg]", e)
     if (dlgItemActions==null){
         console.error("dlgItemActions non definito!")
         return
@@ -160,7 +159,6 @@ function getOrdini() {
     document.querySelectorAll('.itemAdded').forEach( e => e.remove())
 
     try {
-        var orders = {};
         var nOrdini = 0;
         var nElementi = 0;
 
@@ -172,12 +170,14 @@ function getOrdini() {
 
             orderList.forEach(
                 function(order){
-                    console.log("id: "+order.id)
+                    // console.log("id: "+order.id)
 
                     var orderData = order.data();
                     console.log(orderData)
-                    console.log("servito: "+orderData.servito)
+                    // console.log("servito: "+orderData.servito)
 
+                    // Inserisce in lista con chiave id
+                    orders[order.id]= orderData
                     ++nOrdini
 
                     var jsonOrder = orderData.ordine
@@ -186,7 +186,6 @@ function getOrdini() {
                     if(jsonOrder.startsWith("["))
                         jsonOrder = "{\"ordine\":"+jsonOrder+"}"
 
-
                     // console.log("json: ",jsonOrder)
                     var objOrdine = JSON.parse(jsonOrder)
                     objOrdine.ordine.forEach(
@@ -194,10 +193,6 @@ function getOrdini() {
                         function(elemento){     // Per ogni elemento dell'ordine
                             console.log("elemento: ", elemento)
                             //console.log(firebase.firestore.FieldPath.documentId())
-
-                            //var row = newEl.querySelector('#templateDesc').cloneNode(true)
-                            //row.textContent = " - " + elemento.nome + " x " + elemento.qty
-                            //newEl.appendChild(row)
 
                             if (typeof elemento.tipo === 'undefined')
                                 return
@@ -238,6 +233,17 @@ function getOrdini() {
     console.log("[-getOrdini]")
 }
 
+
+function doPrint(){
+    var idxOrder = document.querySelector('#dlgIdxOrder').value
+    alert("Print "+idxOrder)
+}
+
+function doNotifica(){
+    var idxOrder = document.querySelector('#dlgIdxOrder').value
+    alert("Notify "+idxOrder)
+    displayNotification()
+}
 
 function init() {
     console.log('init')

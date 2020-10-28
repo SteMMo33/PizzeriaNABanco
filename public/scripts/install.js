@@ -32,7 +32,9 @@ window.addEventListener('notificationclick', function(e) {
 
 
 
-
+/**
+ * Gestore eventi 'push'
+ */
 window.addEventListener('push', function(e) {
 	console.log("> push")
 	  
@@ -43,7 +45,6 @@ window.addEventListener('push', function(e) {
 	} else {
 		body = 'Push message no payload';
 	}
-
   
   var options = {
     body: 'This notification was generated from a push!',
@@ -65,6 +66,12 @@ window.addEventListener('push', function(e) {
 });
 
 
+window.addEventListener('notificationclick', event => {
+  console.log("NotificationClick")
+  
+  event.notification.close();
+  event.waitUntil(clients.openWindow(event.notification.data.url));
+});
 
 
 /**

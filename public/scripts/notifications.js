@@ -1,12 +1,16 @@
 
 let swRegistration
 
+function storeRegistr(reg) {
+	swRegistration = reg
+}
+
 
 function displayNotification(reg) {
 
-	swRegistration = reg
+	// swRegistration = reg
 	
-   //Ask user if we show notifications
+	//Ask user if we show notifications
    if (window.Notification && Notification.permission === 'granted') {
       notification();
    }
@@ -41,14 +45,14 @@ function notification() {
 			primaryKey: 1
 		 },
 		 actions: [
-			{action: 'explore', title: 'Explore this new world',  icon: './images/logo300.jpg'},
-			{action: 'close', title: 'Close notification',  icon: 'images/icons/logo180.png'},
+			{action: 'explore', title: 'Explore this new world',  icon: 'images/logo300.jpg'},
+			{action: 'close', title: 'Close notification',  icon: 'images/icons/logo192.png'},
 		 ]
 
 	};
 	swRegistration.showNotification('Ho ricevuto un ordine!', options);
 }
- 
+
 
 
 function subscribeUser() {
