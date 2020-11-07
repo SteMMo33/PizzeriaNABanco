@@ -338,7 +338,9 @@ function init() {
                 function(change){
                     console.log("!! changes: "+change.type)
                     console.log("!! data: ",change.doc)
+                    
                     addOrdine(change.doc)
+                    notification()
                 }
             )
         }

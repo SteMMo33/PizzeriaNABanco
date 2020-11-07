@@ -65,6 +65,8 @@ INVIO NOTIFICA ORDINE PRONTO
 ----------------------------
 Invio messaggio al server FCM per invio notifica al subscriber
 
+https://firebase.google.com/docs/cloud-messaging/http-server-ref
+
 
 
 
