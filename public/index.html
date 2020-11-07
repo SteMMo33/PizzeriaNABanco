@@ -106,7 +106,7 @@
 
 
   <!-- Modal Dlg Structure -->
-  <div id="dlgItemActions" class="modal">
+  <!-- <div id="dlgItemActions" class="modal">
     <div class="modal-content">
       <h4>ORDINE</h4>
       <h5 id='txtDlgNome1' style='color:blue; font-weight: 700;'>NOME: <span id='txtDlgNome'>Nome</span></h5>
@@ -135,7 +135,7 @@
       <a href="#!" class="modal-close waves-effect waves-green btn-flat">Annulla</a>
     </div>
   </div>
-
+-->
 <!-- Modal Dlg Structure -->
 <div id="dlgItemActions" class="modal">
   <div class="modal-content">
@@ -147,11 +147,11 @@
 
     <p style='text-align: center;'>
 
-      <a class='waves-effect waves-light btn' onclick='doNotifica()' style='margin:1.1em'>
+      <a class='waves-effect waves-light btn' onclick='sendNotificaPronto()' style='margin:1.1em'>
         Avvia avviso  <i id='menuIcon' class="large material-icons">notifications_active</i>
       </a>
 
-      <a class='waves-effect waves-light btn' onclick='alert("Chiudi")' style='margin:1.1em'>
+      <a class='waves-effect waves-light btn' onclick='alert("Chiudi ordine")' style='margin:1.1em'>
         Chiudi ordine <i id='menuIcon' class="large material-icons">check</i>
       </a>
       
@@ -167,8 +167,8 @@
   </div>
 </div>
 
-    <!-- Modal Dlg Structure -->
-    <div id="dlgSettings" class="modal">
+  <!-- Modal Dlg Structure - Configurazione filtro tipo ordine -->
+  <div id="dlgSettings" class="modal">
       <div class="modal-content">
         <h6>Configurazione:</h6>
         <form action='#'>
@@ -183,7 +183,7 @@
         <a href="#!" class="modal-close waves-effect waves-green btn-flat">Annulla</a>
       </div>
       </div>
-    </div>
+  </div>
   
 <!-- Add the install script here -->
 <script src="/scripts/install.js"></script>

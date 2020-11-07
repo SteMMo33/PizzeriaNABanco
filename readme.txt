@@ -50,6 +50,28 @@ complete(todo) {
 
 
 
+
+
+RICEZIONE NOTIFICA NUOVO ORDINE
+-------------------------------
+
+Sembrano esserci due strade:
+1. la app ordini salva l'ordine nel DB ed invia al server FCM una richiesta di invio notifica ai subscriber
+2. la app ordini salva l'ordine nel DB e l'app banco installa una callback sulla modifica del DB Ordini
+
+
+
+INVIO NOTIFICA ORDINE PRONTO
+----------------------------
+Invio messaggio al server FCM per invio notifica al subscriber
+
+
+
+
+
+
+
+
 Push notification
 -----------------
 L'applicazione deve poter ricevere notifiche di nuovi inserimenti di ordini attraverso

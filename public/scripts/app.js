@@ -2,6 +2,7 @@
 var ordine = new Array();
 var orders = new Array();
 var totaleOrdine = 0
+var nOrdini = 0
 
 /*
     Mosta la pagina principale
@@ -159,7 +160,7 @@ function getOrdini() {
     document.querySelectorAll('.itemAdded').forEach( e => e.remove())
 
     try {
-        var nOrdini = 0;
+        // var nOrdini = 0;
         var nElementi = 0;
 
         // Get Data
@@ -168,7 +169,8 @@ function getOrdini() {
 
             // console.log("orderList: ", orderList    // Nulla di leggibile
 
-            orderList.forEach(
+            orderList.forEach( addOrder)
+            /*
                 function(order){
                     // console.log("id: "+order.id)
 
@@ -220,7 +222,7 @@ function getOrdini() {
                         }
                     )
                 }
-            )
+            ) */
 
             document.querySelector('#menuTitle').textContent = "Ordini: "+nOrdini
         })
@@ -231,6 +233,59 @@ function getOrdini() {
         }
     }
     console.log("[-getOrdini]")
+}
+
+
+function addOrdine(order){
+    // console.log("id: "+order.id)
+
+    var orderData = order.data();
+    console.log(orderData)
+    // console.log("servito: "+orderData.servito)
+
+    // Inserisce in lista con chiave id
+    orders[order.id]= orderData
+    ++nOrdini
+
+    var jsonOrder = orderData.ordine
+    if(typeof jsonOrder=='undefined')
+        jsonOrder = "{\"ordine\":[{\"nome\":\"Problema nei dati\",\"qty\":\"-\"}]}"
+    if(jsonOrder.startsWith("["))
+        jsonOrder = "{\"ordine\":"+jsonOrder+"}"
+
+    // console.log("json: ",jsonOrder)
+    var objOrdine = JSON.parse(jsonOrder)
+    objOrdine.ordine.forEach(
+
+        function(elemento){     // Per ogni elemento dell'ordine
+            console.log("elemento: ", elemento)
+            //console.log(firebase.firestore.FieldPath.documentId())
+
+            if (typeof elemento.tipo === 'undefined')
+                return
+
+            // Se l'elemento è una pizza lo inserisce in lista
+            if (elemento.tipo === 'pizze' || elemento.tipo === 'speciali'){
+
+                // Duplica l'elemento 'template'
+                var newEl = document.querySelector('#template').cloneNode(true);
+                newEl.classList.add('itemAdded')
+                newEl.setAttribute('idx', order.id)
+                newEl.onclick = showOrderDlg
+                newEl.querySelector('#templateRow').textContent = nOrdini
+                newEl.querySelector('#templateTitle').textContent = elemento.qty + " x " + elemento.nome
+            // var d = orderData.data.toDate().toLocaleString()
+            // newEl.querySelector('#templateDesc').textContent = orderData.nome + " - " + d
+                newEl.querySelector('#templatePrice').innerHTML = orderData.consegnaOra
+
+                newEl.style.display='block'
+                document.querySelector('#mainList').appendChild(newEl);
+
+                var n = Number(elemento.qty)
+                // if (!isNaN(n)) nElementi += n
+            }
+        }
+    )
 }
 
 
@@ -245,11 +300,53 @@ function doNotifica(){
     displayNotification()
 }
 
+
+/**
+ * Invia al server FCM la richiesta di notifica di ordine pronto
+ * La richiesta è una fetch POST con i parametri richiesti da FCM
+ * 
+ * Esempio:
+ * curl -X POST --header "Authorization: key=<>" \
+    --Header "Content-Type: application/json" \
+    https://fcm.googleapis.com/fcm/send \
+    -d "{\"to\":\"<>\",\"notification\":{\"body\":\"<>\"}"
+ */
+function sendNotificaPronto(){
+    fetch("https://fcm.googleapis.com/fcm/send", {
+        method: 'POST',
+        body: {
+            token: 	"recieverTokenHere",
+            title: 	"messageTitleHere",
+            message:"messageHere",
+            // url:	"urlHere"(only if you want to implement click action)
+        },
+    })
+    .then((res) =>console.log(res))
+}
+
+
+
+
 function init() {
     console.log('init')
-    getOrdini("non")
+    // getOrdini("non")
+
+    var resRef = firebase.firestore().collection("ordini");
+    resRef.onSnapshot(
+        function(snapshot){
+            snapshot.docChanges().forEach(
+                function(change){
+                    console.log("!! changes: "+change.type)
+                    console.log("!! data: ",change.doc)
+                    addOrdine(change.doc)
+                }
+            )
+        }
+    )
+
     console.log('init end')
 }
 
-// Inizializzazione indipendete dallo stato del serviceWorker
+
+// Inizializzazione indipendente dallo stato del serviceWorker (TBV)
 init();
