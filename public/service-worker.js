@@ -1,6 +1,6 @@
 //
 
-const CACHE_NAME = 'static-cache-v3';
+const CACHE_NAME = 'static-cache-v4';
 
 
 // Add list of files to cache here.
@@ -9,7 +9,10 @@ const FILES_TO_CACHE = [
     '/images/tuttisfum.png',
     '/images/logo300.jpg',
     '/images/facebook-new.png',
-    '/images/instagram-new.png'
+    '/images/instagram-new.png',
+    '/menu.js',
+    '/css/menu.css',
+    '/css/style.css'
 ];
 
 

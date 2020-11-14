@@ -304,24 +304,64 @@ function doNotifica(){
 /**
  * Invia al server FCM la richiesta di notifica di ordine pronto
  * La richiesta è una fetch POST con i parametri richiesti da FCM
+ * Link: https://firebase.google.com/docs/cloud-messaging/http-server-ref
  * 
  * Esempio:
  * curl -X POST --header "Authorization: key=<>" \
     --Header "Content-Type: application/json" \
     https://fcm.googleapis.com/fcm/send \
     -d "{\"to\":\"<>\",\"notification\":{\"body\":\"<>\"}"
+
+
+
+    curl -X POST -H "Authorization: key=<Server Key>" \
+   -H "Content-Type: application/json" \
+   -d '{
+    "data": {
+        "notification": {
+            "title": "FCM Message",
+            "body": "This is an FCM Message",
+            "icon": "/itwonders-web-logo.png",
+        }
+    },
+    "to": "<DEVICE_REGISTRATION_TOKEN>"
+    }' https://fcm.googleapis.com/fcm/send
+
  */
 function sendNotificaPronto(){
-    fetch("https://fcm.googleapis.com/fcm/send", {
-        method: 'POST',
-        body: {
-            token: 	"recieverTokenHere",
-            title: 	"messageTitleHere",
-            message:"messageHere",
-            // url:	"urlHere"(only if you want to implement click action)
-        },
+    var data = {
+               notification: {
+                token: 	"recieverTokenHere",
+                title: 	"messageTitleHere",
+                message:"messageHere"
+        // url:	"urlHere"(only if you want to implement click action)
+            },
+            to: "563548335074"
+    }
+    console.log(data)
+
+    fetch(
+        "https://fcm.googleapis.com/fcm/send", 
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": "key=AAAAgzYZK-I:APA91bGyrlD3xJ1jNjNYcYGavCPskow9n7CSw0YtlrbEp84DrUD_XZ96U8dPB0ajD6D3XK352MXsh6Tk1rr0_yx9i3oX_pIz-_vuPleWHll0zjlTQfu-GW1YA4xQ7LhTlZedbv2NPMZd"
+            },
+            body: JSON.stringify(data),
+        }
+    ).then((res) => {
+        console.log(res)
+        if (res.status==200){
+            console.log("> notifica inviata !")
+        }
+        else if (res.status==401){
+            console.log("> Non autorizzato !")
+        }
+        else {
+            console.error("> Error: "+res.status)
+        }
     })
-    .then((res) =>console.log(res))
 }
 
 
@@ -329,18 +369,20 @@ function sendNotificaPronto(){
 
 function init() {
     console.log('init')
+
     // getOrdini("non")
 
+    // Lettura e sincronizzazione con collection 'ordini'
     var resRef = firebase.firestore().collection("ordini");
     resRef.onSnapshot(
         function(snapshot){
             snapshot.docChanges().forEach(
                 function(change){
                     console.log("!! changes: "+change.type)
-                    console.log("!! data: ",change.doc)
+                    // console.log("!! data: ",change.doc)
                     
                     addOrdine(change.doc)
-                    notification()
+                    // displayNotification()
                 }
             )
         }
@@ -352,3 +394,15 @@ function init() {
 
 // Inizializzazione indipendente dallo stato del serviceWorker (TBV)
 init();
+
+
+/**
+ * notifications.js:53 Uncaught (in promise) TypeError: Failed to execute 'showNotification' on 'ServiceWorkerRegistration': No active registration available on the ServiceWorkerRegistration.
+    at notification (notifications.js:53)
+    at displayNotification (notifications.js:15)
+    at app.js:345
+    at Array.forEach (<anonymous>)
+    at Array.<anonymous> (app.js:339)
+    at next (database.ts:2205)
+    at async_observer.ts:58
+ */

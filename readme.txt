@@ -29,6 +29,21 @@ premuta la quale è apparso il messaggio di richista di installazione dell'app -
 la richiesta di inserimento icone su desktop.
 Premuta l'icona è cominciata l'installazione sul cell.
 
+A2HS
+----
+
+To be served over HTTPs — the web is increasingly being moved in a more secure direction, and many modern web technologies (A2HS included) will work only on secure contexts.
+
+To have a manifest file with the correct fields filled in, linked from the HTML head.
+Standard *.webmanifest
+
+To have an appropriate icon available for displaying on the Home screen.
+
+Chrome additionally requires the app to have a service worker registered (e.g., so it can function when offline).
+
+
+
+
 
 Comunicazione con database
 --------------------------
@@ -59,6 +74,8 @@ Sembrano esserci due strade:
 1. la app ordini salva l'ordine nel DB ed invia al server FCM una richiesta di invio notifica ai subscriber
 2. la app ordini salva l'ordine nel DB e l'app banco installa una callback sulla modifica del DB Ordini
 
+La 2. è OK, funziona sia sulla prima lettura che sulle successive modifiche !!
+
 
 
 INVIO NOTIFICA ORDINE PRONTO
@@ -66,7 +83,7 @@ INVIO NOTIFICA ORDINE PRONTO
 Invio messaggio al server FCM per invio notifica al subscriber
 
 https://firebase.google.com/docs/cloud-messaging/http-server-ref
-
+This document provides a reference for the HTTP syntax used to pass messages from your app server to client apps via Firebase Cloud Messaging.
 
 
 
@@ -81,6 +98,8 @@ il meccanismo del Push notification.
 
 Articolo:
 https://www.codemag.com/Article/1901031/Implementing-Push-Notifications-in-Progressive-Web-Apps-PWAs-Using-Firebase
+Interessante articolo che usa i servizi Google, in particolare Firebase Function
+
 
 
 --
@@ -88,10 +107,15 @@ https://www.codemag.com/Article/1901031/Implementing-Push-Notifications-in-Progr
 https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications
 
 The Web Push Protocol
+---------------------
 Let's look at how to send a push message to the browser using the Web Push Protocol.
 
+Sending a Push Message Using Firebase Cloud Messaging
+
+Public
 Server key: AAAAgzYZK-I:APA91bGyrlD3xJ1jNjNYcYGavCPskow9n7CSw0YtlrbEp84DrUD_XZ96U8dPB0ajD6D3XK352MXsh6Tk1rr0_yx9i3oX_pIz-_vuPleWHll0zjlTQfu-GW1YA4xQ7LhTlZedbv2NPMZd
 Sender ID: 563548335074
+
 
 Sending a Message Using cURL
 ----------------------------
@@ -106,13 +130,16 @@ curl "https://android.googleapis.com/gcm/send/fYFVeJQJ2CY:APA91bGrFGRmy-sY6NaF8a
 LFxjg0y0-ksEhKjpeFC5P" --request POST --header "TTL: 60" --header "Content-Length: 0" \
  --header "Authorization: key=AIzaSyD1JcZ8WM1vTtH6Y0tXq_Pnuw4jgj_92yg"
 
-curl "https://android.googleapis.com/gcm/send/AAAAgzYZK-I:APA91bGyrlD3xJ1jNjNYcYGavCPskow9n7CSw0YtlrbEp84DrUD_XZ96U8dPB0ajD6D3XK352MXsh6Tk1rr0_yx9i3oX_pIz-_vuPleWHll0zjlTQfu-GW1YA4xQ7LhTlZedbv2NPMZd" --request POST --header "TTL: 60" --header "Content-Length: 0" \
+curl "https://android.googleapis.com/gcm/send/AAAAgzYZK-I:APA91bGyrlD3xJ1jNjNYcYGavCPskow9n7CSw0YtlrbEp84DrUD_XZ96U8dPB0ajD6D3XK352MXsh6Tk1rr0_yx9i3oX_pIz-_vuPleWHll0zjlTQfu-GW1YA4xQ7LhTlZedbv2NPMZd" 
+ --request POST --header "TTL: 60" --header "Content-Length: 0" \
  --header "Authorization: key=AIzaSyD1JcZ8WM1vTtH6Y0tXq_Pnuw4jgj_92yg"
 
 
 Sending the message from the Server
 -----------------------------------
 In this section, we cover how to send a push message from the server.
+
+
 
 ---
 
@@ -121,7 +148,6 @@ PWA con notifiche da pizzeria
 https://github.com/dotnet-presentations/blazor-workshop/blob/master/docs/09-progressive-web-app.md
 Usa modulo .NET per ?
 
-https://www.pushpro.io/blog/pwa-push-notifications-for-progressive-web-apps
 
 https://developers.google.com/web/fundamentals/codelabs/push-notifications/
 
@@ -129,6 +155,11 @@ https://github.com/GwtMaterialDesign/gwt-material/wiki/PWA-:-Push-Notifications
 https://dev.to/thisdotmedia/pwa-push-notifications-with-firebase-cloud-messaging-pt1-10ak
 https://github.com/gokulkrishh/demo-progressive-web-app
 https://github.com/devpato/pwa-notifications
+
+https://www.itwonders-web.com/blog/push-notification-using-firebase-demo-tutorial
+https://engineering.matrimony.com/fire-cloud-messaging.html
+
+https://www.thinktecture.com/en/pwa/push-api/
 
 ---
 

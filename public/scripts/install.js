@@ -90,6 +90,7 @@ function saveBeforeInstallPromptEvent(evt) {
 
 /**
  * Event handler for butInstall - Does the PWA installation.
+ * A2HS = Add to Home Screen
  * @param {Event} evt
  */
 function installPWA(evt) {
@@ -98,8 +99,7 @@ function installPWA(evt) {
   installButton.setAttribute('hidden',true);
 
   // Log user response to prompt.
-  deferredInstallPrompt.userChoice
-    .then((choice) => {
+  deferredInstallPrompt.userChoice.then((choice) => {
       if (choice.outcome === 'accepted') {
         console.log('User accepted the A2HS prompt', choice);
       } else {

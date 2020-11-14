@@ -24,6 +24,8 @@ var options = {
   TTL: 60
 };
 
+// Invio notifiche dal server
+
 try {
   webPush.sendNotification(
     pushSubscription,

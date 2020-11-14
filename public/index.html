@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
 
     <meta name="description" content="Nuova Aurora Banco app">
 
@@ -212,15 +212,14 @@ document.addEventListener('DOMContentLoaded', function() {
 // Register service worker.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    	navigator.serviceWorker.register('/service-worker.js')
-        .then((reg) => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then((reg) => {
             console.log('Service worker registered.', reg);
 
-            // Mostra subito
-            // displayNotification(reg)
-            storeRegistr(reg)
+            // storeRegistr(reg)
             
             // Controlla la subscription
+            /*
             reg.pushManager.getSubscription().then(function(sub) {
               if (sub === null) {
                 // Update UI to ask user to register for Push
@@ -229,8 +228,7 @@ if ('serviceWorker' in navigator) {
                 // We have a subscription, update the database
                 console.log('Subscription object: ', sub);
               }
-            })
-
+            }) */
     });
   });
 }
