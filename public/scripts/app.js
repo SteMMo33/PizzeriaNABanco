@@ -59,17 +59,19 @@ function showOrderDlg(e){
     while(nm != 'LI'){
         el = el.parentElement
         nm = el.nodeName
-        console.log(nm)
+        // console.log(nm)
         if (nm=='HTML') return  // Non trovato
     }
     var idOrdine = el.getAttribute('idx')
     console.log("idOrdine: ", idOrdine)
-    var ordine = orders[idOrdine]
+    
+    ordine = orders[idOrdine]
     console.log("Ordine: ", ordine)
 
     // Aggiorna i dati in dlg
     document.querySelector('#dlgIdxOrder').value = idOrdine
     document.querySelector('#txtDlgNome').textContent = ordine.nome
+    document.querySelector('#btnNotifica').style.display = ordine.token ? "block" : "none"
 
     var txtOrdine = ""
     console.log(ordine.ordine)
@@ -84,13 +86,12 @@ function showOrderDlg(e){
     document.querySelector('#txtDlgOrdine').innerHTML = txtOrdine
 
     // Apre la dlg
-    //var dlg = dlgAddToOrder[0]
     dlgItemActions.open()
 }
 
 
 
-
+/*
 function saveOrder(){
     console.log('[saveOrder]', ordine)
 
@@ -127,9 +128,9 @@ function saveOrder(){
     );
   console.log('[saveOrder]')
 }
+*/
 
-
-
+/*
 async function getData()  {
     console.log("getData")
     try {
@@ -151,7 +152,7 @@ async function getData()  {
         }
     }
 }
-
+*/
 
 
 function getOrdini() {
@@ -164,7 +165,7 @@ function getOrdini() {
         var nElementi = 0;
 
         // Get Data
-        var resRef = firebase.firestore().collection("ordini");
+        var resRef = firebase.firestore().collection("ordini").orderBy("data");
         resRef.get().then( /*async*/ (orderList) => {
 
             // console.log("orderList: ", orderList    // Nulla di leggibile
@@ -237,11 +238,9 @@ function getOrdini() {
 
 
 function addOrdine(order){
-    // console.log("id: "+order.id)
 
     var orderData = order.data();
     console.log(orderData)
-    // console.log("servito: "+orderData.servito)
 
     // Inserisce in lista con chiave id
     orders[order.id]= orderData
@@ -272,33 +271,28 @@ function addOrdine(order){
                 newEl.classList.add('itemAdded')
                 newEl.setAttribute('idx', order.id)
                 newEl.onclick = showOrderDlg
-                newEl.querySelector('#templateRow').textContent = nOrdini
+                // newEl.querySelector('#templateRow').textContent = nOrdini
                 newEl.querySelector('#templateTitle').textContent = elemento.qty + " x " + elemento.nome
-            // var d = orderData.data.toDate().toLocaleString()
-            // newEl.querySelector('#templateDesc').textContent = orderData.nome + " - " + d
-                newEl.querySelector('#templatePrice').innerHTML = orderData.consegnaOra
+                newEl.querySelector('#templateNome').textContent = orderData.nome
+                newEl.querySelector('#templateOra').innerHTML = orderData.consegnaOra
 
                 newEl.style.display='block'
                 document.querySelector('#mainList').appendChild(newEl);
 
-                var n = Number(elemento.qty)
+                // var n = Number(elemento.qty)
                 // if (!isNaN(n)) nElementi += n
             }
         }
     )
+    document.querySelector('#menuTitle').textContent = "Ordini da evadere"
 }
 
 
 function doPrint(){
     var idxOrder = document.querySelector('#dlgIdxOrder').value
-    alert("Print "+idxOrder)
+    alert("TODO - Print "+idxOrder)
 }
 
-function doNotifica(){
-    var idxOrder = document.querySelector('#dlgIdxOrder').value
-    alert("Notify "+idxOrder)
-    displayNotification()
-}
 
 
 /**
@@ -311,8 +305,6 @@ function doNotifica(){
     --Header "Content-Type: application/json" \
     https://fcm.googleapis.com/fcm/send \
     -d "{\"to\":\"<>\",\"notification\":{\"body\":\"<>\"}"
-
-
 
     curl -X POST -H "Authorization: key=<Server Key>" \
    -H "Content-Type: application/json" \
@@ -327,21 +319,76 @@ function doNotifica(){
     "to": "<DEVICE_REGISTRATION_TOKEN>"
     }' https://fcm.googleapis.com/fcm/send
 
+    On success:
+    {
+      "name":"projects/myproject-b5ae1/messages/0:1500415314455276%31bd1c9631bd1c96"
+    }
+
  */
-function sendNotificaPronto(){
+function sendNotificaProntoV1(){
     var data = {
-               notification: {
-                token: 	"recieverTokenHere",
-                title: 	"messageTitleHere",
-                message:"messageHere"
-        // url:	"urlHere"(only if you want to implement click action)
+        message: {
+            token: 	"fh_24D06e6VpP-il_9zby1:APA91bGQkEA3mDA3PCLMdsmdy_qixqYPcbq9J1mXDnbiyAWwZQOi1XPJNaXwIrT1JekqMLYxm8c7OJnt6jYt3s9fHBPBHYqQQ0o49RIeFXp_QoqIxmIvrTxNA-QOLCZ6pXwSFdhmYzUc",
+            notification: {
+                title: 	"Notifica da Banco",
+                message:"Pizza è quasi pronta !!"
             },
-            to: "563548335074"
+        }
     }
     console.log(data)
+    console.log(JSON.stringify(data))
 
-    fetch(
-        "https://fcm.googleapis.com/fcm/send", 
+    fetch( "https://fcm.googleapis.com/v1/projects/pizzeria-nuova-aurora/messages:send", 
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer AAAAgzYZK-I:APA91bGyrlD3xJ1jNjNYcYGavCPskow9n7CSw0YtlrbEp84DrUD_XZ96U8dPB0ajD6D3XK352MXsh6Tk1rr0_yx9i3oX_pIz-_vuPleWHll0zjlTQfu-GW1YA4xQ7LhTlZedbv2NPMZd"
+            },
+            body: JSON.stringify(data),
+        }
+    ).then((res) => {
+        console.log(res)
+        if (res.status==200){
+            console.log("> notifica inviata !")
+            M.toast({html:"Notifica inviata !"});
+        }
+        else if (res.status==401){
+            console.error("> Non autorizzato !")
+            M.toast({html:"Err: non autorizzato"});
+        }
+        else {
+            console.error("> Error: "+res.status)
+            M.toast({html:"Errore: "+res.status});
+        }
+    })
+}
+
+
+/* OK */
+function sendNotificaPronto(){
+
+    var jsonOrdine = ordine.ordine
+    var arrOrdine = JSON.parse(jsonOrdine)
+    var numero = 0
+    arrOrdine.forEach( (el, idx) => {
+        numero += Number(el.qty)
+    })
+    var data = {
+        data: {
+            notification: {
+                title: 	"Pizzeria Nuova Aurora",
+                body:"Pizza è quasi pronta !! "+ordine.nome + " - Numero pizze: "+numero,
+                icon: "/images/icons/logo128.png",
+                color: "#ff0000"
+            },
+        },
+        to: ordine.token
+    }
+    console.log(data)
+    console.log(JSON.stringify(data))
+
+    fetch( "https://fcm.googleapis.com/fcm/send", 
         {
             method: 'POST',
             headers: {
@@ -354,16 +401,18 @@ function sendNotificaPronto(){
         console.log(res)
         if (res.status==200){
             console.log("> notifica inviata !")
+            M.toast({html:"Notifica inviata !"});
         }
         else if (res.status==401){
-            console.log("> Non autorizzato !")
+            console.error("> Non autorizzato !")
+            M.toast({html:"Errore: non autorizzato"});
         }
         else {
             console.error("> Error: "+res.status)
+            M.toast({html:"Errore: "+res.status});
         }
     })
 }
-
 
 
 
@@ -395,14 +444,3 @@ function init() {
 // Inizializzazione indipendente dallo stato del serviceWorker (TBV)
 init();
 
-
-/**
- * notifications.js:53 Uncaught (in promise) TypeError: Failed to execute 'showNotification' on 'ServiceWorkerRegistration': No active registration available on the ServiceWorkerRegistration.
-    at notification (notifications.js:53)
-    at displayNotification (notifications.js:15)
-    at app.js:345
-    at Array.forEach (<anonymous>)
-    at Array.<anonymous> (app.js:339)
-    at next (database.ts:2205)
-    at async_observer.ts:58
- */

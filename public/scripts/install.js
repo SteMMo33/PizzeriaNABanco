@@ -6,7 +6,6 @@ let deferredInstallPrompt = null;
 const installButton = document.getElementById('butInstall');
 installButton.addEventListener('click', installPWA);
 
-// const searchOrderlButton = document.getElementById('butInstall');
 
 
 // Add event listener for beforeinstallprompt event
@@ -16,7 +15,7 @@ window.addEventListener('beforeinstallprompt', saveBeforeInstallPromptEvent);
 window.addEventListener('appinstalled', logAppInstalled);
 
 
-window.addEventListener('notificationclick', function(e) {
+self.addEventListener('notificationclick', function(e) {
 	var notification = e.notification;
 	var primaryKey = notification.data.primaryKey;
 	var action = e.action;
@@ -35,7 +34,7 @@ window.addEventListener('notificationclick', function(e) {
 /**
  * Gestore eventi 'push'
  */
-window.addEventListener('push', function(e) {
+self.addEventListener('push', function(e) {
 	console.log("> push")
 	  
 	var body;
@@ -65,13 +64,6 @@ window.addEventListener('push', function(e) {
   );
 });
 
-
-window.addEventListener('notificationclick', event => {
-  console.log("NotificationClick")
-  
-  event.notification.close();
-  event.waitUntil(clients.openWindow(event.notification.data.url));
-});
 
 
 /**

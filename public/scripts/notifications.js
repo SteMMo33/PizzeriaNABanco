@@ -12,7 +12,7 @@ function displayNotification(reg) {
 	
 	//Ask user if we show notifications
    if (window.Notification && Notification.permission === 'granted') {
-      notification();
+      // notification();
    }
    // If the user hasn't told whether he wants to be notified or not
    // Note: because of Chrome, we cannot be sure the permission property
@@ -50,7 +50,7 @@ function notification() {
 		 ]
 
 	};
-	swRegistration.showNotification('Ho ricevuto un ordine!', options);
+	//swRegistration.showNotification('Ho ricevuto un ordine!', options);
 }
 
 

@@ -138,3 +138,7 @@ header {
     background: #e7e7e7;
   }
 
+#versione {
+  color: lightgray;
+  padding: 0 15px;
+}
