@@ -22,3 +22,8 @@ body {
 .collection.with-header .collection-item {
     padding: 5px 10px;
 }
+
+#versione {
+    color: lightgray;
+    padding: 0 15px;
+}

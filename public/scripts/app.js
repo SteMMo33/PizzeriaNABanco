@@ -3,6 +3,7 @@ var ordine = new Array();
 var orders = new Array();
 var totaleOrdine = 0
 var nOrdini = 0
+var idOrdineSel = 0     // ID ordine selezionato
 
 /*
     Mosta la pagina principale
@@ -10,8 +11,8 @@ var nOrdini = 0
 function showHome(item)
 {
     console.log('showHome '+item)
-    document.getElementById('pageContatti').style.display='none';
-    document.getElementById('pageOrdine').style.display='none';
+    //document.getElementById('pageContatti').style.display='none';
+    //document.getElementById('pageOrdine').style.display='none';
     document.getElementById('pageHome').style.display='block';
     getMenuItems(item)
 }
@@ -23,7 +24,7 @@ function showHome(item)
 function showContatti()
 {
     console.log('showContatti')
-    document.getElementById('pageContatti').style.display='block';
+    //document.getElementById('pageContatti').style.display='block';
     document.getElementById('pageHome').style.display='none';
     //document.getElementById('pageOrdine').style.display='none';
 }
@@ -47,7 +48,7 @@ function showDlgSettings(){
 
 
 function showOrderDlg(e){
-    console.log("[showOrderDlg]", e)
+    console.log("[showOrderDlg]")
     if (dlgItemActions==null){
         console.error("dlgItemActions non definito!")
         return
@@ -62,14 +63,14 @@ function showOrderDlg(e){
         // console.log(nm)
         if (nm=='HTML') return  // Non trovato
     }
-    var idOrdine = el.getAttribute('idx')
-    console.log("idOrdine: ", idOrdine)
+    idOrdineSel = el.getAttribute('idx')
+    console.log("idOrdineSel: ", idOrdineSel)
     
-    ordine = orders[idOrdine]
+    ordine = orders[idOrdineSel]
     console.log("Ordine: ", ordine)
 
     // Aggiorna i dati in dlg
-    document.querySelector('#dlgIdxOrder').value = idOrdine
+    document.querySelector('#dlgIdxOrder').value = idOrdineSel
     document.querySelector('#txtDlgNome').textContent = ordine.nome
     document.querySelector('#btnNotifica').style.display = ordine.token ? "block" : "none"
 
@@ -130,30 +131,6 @@ function saveOrder(){
 }
 */
 
-/*
-async function getData()  {
-    console.log("getData")
-    try {
-        var restaurant = {};
-
-        // Get Restaurant Data
-        var resRef = firebase.firestore().collection("menu");
-        var resSnap = await resRef.get();
-        // console.log(resSnap)
-        resSnap.forEach((doc) => {
-            console.log(doc.data())
-        })
-        getMenuItems("pizze")
-        return restaurant
-    } catch (e) {
-        console.error(e)
-        return {
-            errorMsg: "Something went wrong. Please Try Again."
-        }
-    }
-}
-*/
-
 
 function getOrdini() {
     console.log("[+getOrdini] ")
@@ -165,7 +142,7 @@ function getOrdini() {
         var nElementi = 0;
 
         // Get Data
-        var resRef = firebase.firestore().collection("ordini").orderBy("data");
+        var resRef = firebase.firestore().collection("ordini");
         resRef.get().then( /*async*/ (orderList) => {
 
             // console.log("orderList: ", orderList    // Nulla di leggibile
@@ -257,7 +234,7 @@ function addOrdine(order){
     objOrdine.ordine.forEach(
 
         function(elemento){     // Per ogni elemento dell'ordine
-            console.log("elemento: ", elemento)
+            //console.log("elemento: ", elemento)
             //console.log(firebase.firestore.FieldPath.documentId())
 
             if (typeof elemento.tipo === 'undefined')
@@ -293,6 +270,39 @@ function doPrint(){
     alert("TODO - Print "+idxOrder)
 }
 
+/**
+ * Chiede conferma
+ */
+function doChiudiOrdine(){
+    dlgSicuro.open();
+    console.log("> Dopo sicuro")
+}
+
+/**
+ * Scrive in DB il flag servito per l'ordine corrente 'ordine'
+ */
+function chiudiOrdine(){
+
+    var dbOrdini = firebase.firestore().collection("ordini")
+    var id = idOrdineSel;
+
+    // Scrittura record
+    dbOrdini.doc(id).update({
+        servito: true,
+    })
+    .then(
+         function(){
+            console.log("[doChiudiOrdine] OK")
+            M.toast({html: "Ordine chiuso correttamente"})
+            setTimeout( function(){dlgItemActions.close()}, 4000);
+         }
+    )
+    .catch(
+        function(error){
+            console.error("[doChiudiOrdine] ", error)
+        }
+    );
+}
 
 
 /**
@@ -300,25 +310,6 @@ function doPrint(){
  * La richiesta è una fetch POST con i parametri richiesti da FCM
  * Link: https://firebase.google.com/docs/cloud-messaging/http-server-ref
  * 
- * Esempio:
- * curl -X POST --header "Authorization: key=<>" \
-    --Header "Content-Type: application/json" \
-    https://fcm.googleapis.com/fcm/send \
-    -d "{\"to\":\"<>\",\"notification\":{\"body\":\"<>\"}"
-
-    curl -X POST -H "Authorization: key=<Server Key>" \
-   -H "Content-Type: application/json" \
-   -d '{
-    "data": {
-        "notification": {
-            "title": "FCM Message",
-            "body": "This is an FCM Message",
-            "icon": "/itwonders-web-logo.png",
-        }
-    },
-    "to": "<DEVICE_REGISTRATION_TOKEN>"
-    }' https://fcm.googleapis.com/fcm/send
-
     On success:
     {
       "name":"projects/myproject-b5ae1/messages/0:1500415314455276%31bd1c9631bd1c96"
@@ -365,7 +356,7 @@ function sendNotificaProntoV1(){
 }
 
 
-/* OK */
+/* OK Notifica senza autorizzazione */
 function sendNotificaPronto(){
 
     var jsonOrdine = ordine.ordine
@@ -378,14 +369,14 @@ function sendNotificaPronto(){
         data: {
             notification: {
                 title: 	"Pizzeria Nuova Aurora",
-                body:"Pizza è quasi pronta !! "+ordine.nome + " - Numero pizze: "+numero,
+                body:"Pizza è quasi pronta !! Ti aspettiamo",
                 icon: "/images/icons/logo128.png",
                 color: "#ff0000"
             },
         },
         to: ordine.token
     }
-    console.log(data)
+    // console.log(data)
     console.log(JSON.stringify(data))
 
     fetch( "https://fcm.googleapis.com/fcm/send", 
@@ -422,16 +413,18 @@ function init() {
     // getOrdini("non")
 
     // Lettura e sincronizzazione con collection 'ordini'
-    var resRef = firebase.firestore().collection("ordini");
+    var resRef = firebase.firestore().collection("ordini").where("servito","==",false).orderBy("consegnaOra");
     resRef.onSnapshot(
         function(snapshot){
             snapshot.docChanges().forEach(
                 function(change){
-                    console.log("!! changes: "+change.type)
+                    console.log("!! changes: ", change)
                     // console.log("!! data: ",change.doc)
-                    
-                    addOrdine(change.doc)
-                    // displayNotification()
+                    if (change.type=='added')
+                        addOrdine(change.doc)
+                    else if (change.type=='modified')
+                        console.log("! modified - ToDo")
+                        //addOrdine(change.doc)
                 }
             )
         }

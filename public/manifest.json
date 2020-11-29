@@ -1,6 +1,6 @@
 {
     "name": "Pizzeria NA Banco",
-    "short_name": "Nuova Aurora Banco",
+    "short_name": "Banco Nuova Aurora ",
     "description": "App per ricevere ordini alla Pizzeria Nuova Aurora",
     "icons": [{
       "src": "/images/icons/logo128.png",

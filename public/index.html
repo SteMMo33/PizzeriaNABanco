@@ -118,15 +118,15 @@
 
     <p style='text-align: center;'>
 
-      <a class='waves-effect waves-light btn' id='btnNotifica' onclick='sendNotificaPronto()' style='margin:1.1em'>
+      <a class='waves-effect waves-light btn' id='btnNotifica' onclick='sendNotificaPronto()' style='margin:1.1em 0'>
         Avvia avviso  <i id='menuIcon' class="large material-icons">notifications_active</i>
       </a>
 
-      <a class='waves-effect waves-light btn' onclick='alert("Chiudi ordine - ToDo")' style='margin:1.1em'>
+      <a class='waves-effect waves-light btn' onclick='doChiudiOrdine()' style='margin:1.1em 0; display:block;'>
         Chiudi ordine <i id='menuIcon' class="large material-icons">check</i>
       </a>
       
-      <a class='waves-effect waves-light btn' onclick='doPrint()' style='margin:1.1em'>
+      <a class='waves-effect waves-light btn' onclick='doPrint()' style='margin:1.1em 0; display:block;'>
         Stampa scontrino <i id='menuIcon' class="large material-icons">local_printshop</i>
       </a>
 
@@ -156,6 +156,18 @@
       </div>
   </div>
   
+  <!-- Modal Structure -->
+  <div id="dlgSicuro" class="modal">
+    <div class="modal-content">
+      <h4>Confermare</h4>
+      <p>Sei sicuro/a ??</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat" onClick='chiudiOrdine()'>SI</a>
+      <a href="#!" class="modal-close waves-effect waves-red btn-flat">NO</a>
+    </div>
+  </div>
+
 <!-- Add the install script here -->
 <script src="/scripts/install.js"></script>
 <script src="/scripts/notifications.js"></script>
@@ -169,6 +181,7 @@
 // Materialize - Modal
 var dlgItemActions
 var dlgSettings
+var dlgSicuro
 
 document.addEventListener('DOMContentLoaded', function() {
     //
@@ -178,7 +191,10 @@ document.addEventListener('DOMContentLoaded', function() {
     //
     elem = document.querySelector('#dlgSettings');
     dlgSettings = M.Modal.init(elem, options);
-});
+
+    elem = document.querySelector('#dlgSicuro');
+    dlgSicuro = M.Modal.init(elem, options);
+  });
 
 // Register service worker.
 if ('serviceWorker' in navigator) {
