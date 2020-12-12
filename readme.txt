@@ -51,20 +51,6 @@ Firestore
 Condivide il DB dell'app dei clienti
 
 
-list() {
-   return this.db.collection('/todos', ref => ref.orderBy('complete').orderBy('text')).valueChanges();
-}
-
-
-complete(todo) {
-   return this.db.collection('todos').doc(todo.id).update({
-     complete: todo.complete,
-     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-   });
-}
-
-
-
 
 
 RICEZIONE NOTIFICA NUOVO ORDINE
@@ -84,9 +70,6 @@ Invio messaggio al server FCM per invio notifica al subscriber
 
 https://firebase.google.com/docs/cloud-messaging/http-server-ref
 This document provides a reference for the HTTP syntax used to pass messages from your app server to client apps via Firebase Cloud Messaging.
-
-
-
 
 
 
@@ -167,3 +150,9 @@ Multihost
 
 https://fireship.io/lessons/deploy-multiple-sites-to-firebase-hosting/
 
+
+
+Stampa
+------
+Per la stampa dello scontrino uso una chiamata ad un servizio sulla macchina di sviluppo
+la quale esegue la chiamata PrintJob dello standard IPP

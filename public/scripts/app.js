@@ -77,7 +77,9 @@ function showOrderDlg(e){
     var txtOrdine = ""
     console.log(ordine.ordine)
     var objOrdine = JSON.parse(ordine.ordine)
+    ordine.objOrdine = objOrdine
     console.log(objOrdine)
+
     objOrdine.forEach(elemento => {
         if (typeof elemento.tipo === 'undefined')
             txtOrdine += "- "+elemento.qty+" x "+elemento.nome+"<br>"
@@ -132,7 +134,8 @@ function saveOrder(){
 */
 
 
-function getOrdini() {
+
+function _getOrdini() {
     console.log("[+getOrdini] ")
     // Elimina elementi aggiunti precedentemente
     document.querySelectorAll('.itemAdded').forEach( e => e.remove())
@@ -219,7 +222,7 @@ function addOrdine(order){
     var orderData = order.data();
     console.log(orderData)
 
-    // Inserisce in lista con chiave id
+    // Inserisce in lista orders con chiave id
     orders[order.id]= orderData
     ++nOrdini
 
@@ -231,6 +234,7 @@ function addOrdine(order){
 
     // console.log("json: ",jsonOrder)
     var objOrdine = JSON.parse(jsonOrder)
+    orders[objOrdine] = objOrdine
     objOrdine.ordine.forEach(
 
         function(elemento){     // Per ogni elemento dell'ordine
@@ -259,16 +263,126 @@ function addOrdine(order){
                 // var n = Number(elemento.qty)
                 // if (!isNaN(n)) nElementi += n
             }
+            else console.log("Tipo non previsto: ", elemento.tipo)
         }
     )
-    document.querySelector('#menuTitle').textContent = "Ordini da evadere"
+    document.querySelector('#menuTitle').textContent = "Ordini da evadere OGGI"
 }
 
 
-function doPrint(){
+/** Stampa IPP
+ * RFC8010
+  */
+function doPrintIpp(){
     var idxOrder = document.querySelector('#dlgIdxOrder').value
-    alert("TODO - Print "+idxOrder)
+    // var ordine = orders[idxOrder]
+    // L'ordine selezionato è in 'ordine
+    console.log("[print] ", ordine.nome)
+    console.log("[print] ", ordine.objOrdine)
+
+    /* Da comando ippfind ricevo:
+        ipp://GhilbaDebian.local:631/printers/CUSTOM_Engineering_Q3
+    */
+    var printer = 'CUSTOM_Engineering_Q3'
+
+    /*  IPP uses HTTP as its transport protocol. 
+        Each IPP request is a HTTP POST with a binary IPP message and print file, if any, in the request message body. 
+        The corresponding IPP response is returned in the POST response. 
+        HTTP connections can be unencrypted, upgraded to TLS encryption using an HTTP OPTIONS request, or encrypted immediately (HTTPS). 
+        HTTP POST requests can also be authenticated using any of the usual HTTP mechanisms.
+    */
+
+    /* Test con stampa http - da parametrizzare */
+    var ip = "127.0.0.1" // "localhost"
+    var port = 631
+    var text = "Prova di stampa\nProva di stampa"
+    var bText = new TextEncoder().encode(text);
+    console.log("bText: ", bText)
+
+    var reqBody1 = [ 0x01, 0x01,    // IPP version
+        0x00, 0x02,                 // Print-job request
+        0x00, 0x00, 0x00, 0x50,     // Arbitrary request ID
+        0x45, 0x00, 0x0B, 'p','r','i','n','t','e','r','-','u','r','i',
+            0x00, 59, 'i','p','p',':','/','/','l','o','c','a','l','h','o','s','t',':','6','3','1','/','p','r','i','n','t','e','r','s','/','C','U','S','T','O','M','_','E','n','g','i','n','e','e','r','i','n','g','_,','Q','3',
+        0x03                        // end-of-attributes-tag
+    ]                      
+    reqBody1.push(bText)
+
+    console.log("reqBody1: ", reqBody1)
+    
+    var reqBody = new Uint8Array(reqBody1)
+    /* ATTR uri "printer-uri" "ipp://printer.example.com/ipp/print"
+    0x45                           uri type             value-tag
+    0x000b                                              name-length
+    printer-uri                    printer-uri          name
+    0x002c                                              value-length
+    ipp://printer.example.com/ipp/ printer pinetree     value
+    print/pinetree
+
+    Stampa di prova: localhost - - [08/Dec/2020:17:53:52 +0100] "POST /printers/CUSTOM_Engineering_Q3 HTTP/1.1" 200 397 Print-Job successful-ok
+
+    */
+
+    console.log(typeof reqBody)
+    console.log("reqBody: ", reqBody)
+
+    console.log('http://'+ip+':'+port+'/printers/'+printer)
+    fetch('http://'+ip+':'+port+'/printers/'+printer, {
+        method: 'POST',
+        mode: 'no-cors', 
+        headers: {
+            'Content-Type': 'application/ipp'
+          },
+        body: reqBody
+        })
+    .then(response => {
+        console.log(response)
+        M.toast({html: "Stampa eseguita"})
+    })
+    .catch(response => console.error(response))
 }
+
+
+/** 
+ * Stampa via printer server sulla stessa sottorete
+  */
+ function doPrint(){
+    var idxOrder = document.querySelector('#dlgIdxOrder').value
+    // var ordine = orders[idxOrder]
+    // L'ordine selezionato è in 'ordine
+    console.log("[print] ", ordine.nome)
+    console.log("[print] ", ordine.objOrdine)
+
+    /* Test con stampa http - da parametrizzare */
+    var ip = "192.168.1.124" // "127.0.0.1" // "localhost"
+    var reqBody = {
+        nome: ordine.nome,
+        ora: ordine.consegnaOra,
+        ordine: ordine.objOrdine
+    }
+
+    console.log("reqBody: ", reqBody)
+
+    console.log('http://'+ip+'/stampa.php')
+    fetch('http://'+ip+':'+'/stampa.php', {
+        method: 'POST',
+        mode: 'no-cors', 
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reqBody)
+    })
+    .then(response => {
+        console.log(response)
+        M.toast({html: "Stampa eseguita"})
+    })
+    .catch(response => {
+        console.error(response)
+        M.toast({html: "Errore "+response})
+    })
+}
+
 
 /**
  * Chiede conferma
@@ -411,24 +525,38 @@ function init() {
     console.log('init')
 
     // getOrdini("non")
+    var found = false
 
     // Lettura e sincronizzazione con collection 'ordini'
-    var resRef = firebase.firestore().collection("ordini").where("servito","==",false).orderBy("consegnaOra");
+    var now = new Date()
+    var data = now.getFullYear().toString()+(now.getMonth()+1).toString().padStart(2,'0')+now.getDate().toString().padStart(2,'0')
+    console.log("Filtro per: ", data)
+
+    var resRef = firebase.firestore().collection("ordini").where("consegnaData","==", data).where("servito","==",false).orderBy("consegnaOra");
     resRef.onSnapshot(
         function(snapshot){
             snapshot.docChanges().forEach(
                 function(change){
                     console.log("!! changes: ", change)
                     // console.log("!! data: ",change.doc)
-                    if (change.type=='added')
+                    if (change.type=='added'){
                         addOrdine(change.doc)
-                    else if (change.type=='modified')
+                        found = true
+                    }
+                    else if (change.type=='modified'){
                         console.log("! modified - ToDo")
                         //addOrdine(change.doc)
+                    }
+                    else if (change.type=='removed'){
+                        console.log("! removed - ToDo - ", change.data)
+                    }
                 }
             )
         }
     )
+    setTimeout( () => {
+        if (!found) document.querySelector('#menuTitle').textContent = "Ancora nessun ordine"
+    }, 2000)
 
     console.log('init end')
 }

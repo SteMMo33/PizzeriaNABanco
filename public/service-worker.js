@@ -6,12 +6,8 @@ const CACHE_NAME = 'static-cache-v6';
 // Add list of files to cache here.
 const FILES_TO_CACHE = [
     '/offline.html',
-    '/images/tuttisfum.png',
     '/images/icons/logo128.png',
     '/images/logo300.jpg',
-    '/images/facebook-new.png',
-    '/images/instagram-new.png',
-    '/menu.js',
     '/css/menu.css',
     '/css/style.css',
     '/scripts/notifications.js'
