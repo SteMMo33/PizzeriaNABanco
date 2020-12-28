@@ -1,4 +1,4 @@
-
+var cfg = new Array()
 var ordine = new Array();
 var orders = new Array();
 var totaleOrdine = 0
@@ -39,9 +39,10 @@ function showDlgSettings(){
         return
     }
     // Aggiorna i dati in dlg
-    //document.querySelector('#dlgAddIdx').val = idx
-    document.querySelector('#dlgAddNumero').textContent = "1"
-
+    document.querySelector('#cfgIpStampante').value = cfg['ipStampante']
+    document.querySelector('#cfgPizze').checked = cfg['rxPizze']==1
+    document.querySelector('#cfgRistorante').checked = cfg['rxCucina']==1
+    document.querySelector('#cfgBevande').checked = cfg['rxBevande']==1
     // Apre la dlg
     dlgSettings.open()
 }
@@ -223,7 +224,7 @@ function addOrdine(order){
     console.log(orderData)
 
     // Inserisce in lista orders con chiave id
-    orders[order.id]= orderData
+    orders[order.id] = orderData
     ++nOrdini
 
     var jsonOrder = orderData.ordine
@@ -234,7 +235,7 @@ function addOrdine(order){
 
     // console.log("json: ",jsonOrder)
     var objOrdine = JSON.parse(jsonOrder)
-    orders[objOrdine] = objOrdine
+    // orders[objOrdine] = objOrdine
     objOrdine.ordine.forEach(
 
         function(elemento){     // Per ogni elemento dell'ordine
@@ -345,16 +346,16 @@ function doPrintIpp(){
 
 /** 
  * Stampa via printer server sulla stessa sottorete
+ * Richiema lo script stampa.php
   */
  function doPrint(){
     var idxOrder = document.querySelector('#dlgIdxOrder').value
-    // var ordine = orders[idxOrder]
     // L'ordine selezionato è in 'ordine
     console.log("[print] ", ordine.nome)
     console.log("[print] ", ordine.objOrdine)
 
     /* Test con stampa http - da parametrizzare */
-    var ip = "192.168.1.124" // "127.0.0.1" // "localhost"
+    var ip = cfg['ipStampante'] // "192.168.1.124" // "127.0.0.1" // "localhost"
     var reqBody = {
         nome: ordine.nome,
         ora: ordine.consegnaOra,
@@ -375,7 +376,10 @@ function doPrintIpp(){
     })
     .then(response => {
         console.log(response)
-        M.toast({html: "Stampa eseguita"})
+        if (response.ok)
+            M.toast({html: "Stampa eseguita"})
+        else
+            M.toast({html: "ERRORE di stampa"})
     })
     .catch(response => {
         console.error(response)
@@ -388,6 +392,7 @@ function doPrintIpp(){
  * Chiede conferma
  */
 function doChiudiOrdine(){
+    console.log("Chiudi? ", idOrdineSel)
     dlgSicuro.open();
     console.log("> Dopo sicuro")
 }
@@ -407,8 +412,16 @@ function chiudiOrdine(){
     .then(
          function(){
             console.log("[doChiudiOrdine] OK")
+
+            // Tolgo la riga a video
+            var el = document.querySelectorAll("li[idx='"+id+"']")
+            el.forEach( li =>  li.remove())
+            // Tolgo il record in memoria
+            delete orders[id]
+            --nOrdini
+
             M.toast({html: "Ordine chiuso correttamente"})
-            setTimeout( function(){dlgItemActions.close()}, 4000);
+            setTimeout( function(){dlgItemActions.close()}, 2000);
          }
     )
     .catch(
@@ -521,9 +534,45 @@ function sendNotificaPronto(){
 
 
 
+function getSettings() {
+    let tmp = localStorage.getItem('ipStampante');
+    cfg['ipStampante'] = tmp ? tmp : "192.168.1.65"
+
+    tmp = localStorage.getItem('rxPizze');
+    cfg['rxPizze'] = tmp ? tmp : "1"
+    tmp = localStorage.getItem('rxCucina');
+    cfg['rxCucina'] = tmp ? tmp : "0"
+    tmp = localStorage.getItem('rxBevande');
+    cfg['rxBevande'] = tmp ? tmp : "0"
+
+    console.log("cfg: ", cfg)
+}
+
+
+function saveCfg(){
+    let tmp = document.querySelector('#cfgIpStampante').value
+    localStorage.setItem('ipStampante', tmp)
+    cfg['ipStampante'] = tmp;
+
+    tmp = document.querySelector('#cfgBevande').checked
+    localStorage.getItem('rxBevande') = tmp
+    cfg['rxBevande'] = tmp
+
+    tmp = document.querySelector('#cfgRistorante').checked
+    localStorage.getItem('rxCucina') = tmp
+    cfg['rxCucina'] = tmp
+
+}
+
 function init() {
     console.log('init')
 
+    getSettings()
+    getOrdini()
+}
+
+
+function getOrdini() {
     // getOrdini("non")
     var found = false
 
@@ -558,7 +607,7 @@ function init() {
         if (!found) document.querySelector('#menuTitle').textContent = "Ancora nessun ordine"
     }, 2000)
 
-    console.log('init end')
+    console.log('getOrdini end')
 }
 
 

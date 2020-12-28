@@ -35,7 +35,7 @@
   font-size: 20px;  -ms-flex-item-align: center;  -ms-grid-row-align: center;
   align-self: center; margin-left: 55px;'>
     <p>BANCO Nuova Aurora
-      <!-- <i class="small material-icons right" onclick="showDlgSettings()">settings</i> -->
+      <i class="small material-icons right" onclick="showDlgSettings()" style='margin-right: 5px;'>settings</i>
     </p>
   </div>
   </header>
@@ -43,7 +43,7 @@
     <div class="pusha-panel pusha-panel--left" aria-hidden="true">
       <div class="pusha-panel__content">
         <img src='/images/logo300.jpg' style='width: 180px; margin: 15px auto;display:block;'>
-        <div id='versione'>Versione: 0.1</div>
+        <div id='versione'>Versione: 0.2</div>
         <ul class="menu__list">
           <li><a onclick="panel.close();"><i class="material-icons">local_pizza</i> Vedi solo oggi</a></li>
           <li><a onclick="panel.close();"><i class="material-icons">local_pizza</i> Vedi tutti ordini</a></li>
@@ -110,8 +110,8 @@
 <!-- Modal Dlg Structure -->
 <div id="dlgItemActions" class="modal">
   <div class="modal-content">
-    <div style='text-align: center; font-size: 25px;'>ORDINE</div>
-    <h6 id='txtDlgNome1' style='color:blue; font-weight: 600;'>NOME: <span id='txtDlgNome'>Nome</span></h6>
+    <div style='text-align: center; font-size: 24px;'>ORDINE</div>
+    <h6 id='txtDlgNome1' style='color:blue; font-weight: 600;text-align: center;''><span id='txtDlgNome'>Nome</span></h6>
     <h6 id='txtDlgOrdine' style='color:red'>Ordine</h6>
 
     <input type='hidden' id='dlgIdxOrder'>
@@ -141,12 +141,14 @@
   <!-- Modal Dlg Structure - Configurazione filtro tipo ordine -->
   <div id="dlgSettings" class="modal">
       <div class="modal-content">
-        <h6>Configurazione:</h6>
+        <h6>Visualizza:</h6>
         <form action='#'>
           
-          <p><label for='cfgPizze'><input type='checkbox' id='cfgPizze' value='cfgPizze' /><span>Pizze</span></label></p>
-          <p><label for='cfgBevande'><input type='checkbox' id='cfgBevande' checked='checked'><span>Bevande</span></label></p>
-          <p><label for='cfgRistorante'><input type='checkbox' id='cfgRistorante' checked='checked' /><span>Ristorante</span></label></p>
+          <p><label for='cfgPizze'><input type='checkbox' id='cfgPizze' /><span>Pizze</span></label></p>
+          <p><label for='cfgBevande'><input type='checkbox' id='cfgBevande' ><span>Bevande</span></label></p>
+          <p><label for='cfgRistorante'><input type='checkbox' id='cfgRistorante' /><span>Ristorante</span></label></p>
+
+          <p><label for='cfgIpStampante'>Stampante: <input type='input' id='cfgIpStampante' value=''/></label></p>
         </form>
 
       <div class="modal-footer">
@@ -160,7 +162,7 @@
   <div id="dlgSicuro" class="modal">
     <div class="modal-content">
       <h4>Confermare</h4>
-      <p>Sei sicuro/a ??</p>
+      <p>Sei sicuro/a di chiudere l'ordine ??</p>
     </div>
     <div class="modal-footer">
       <a href="#!" class="modal-close waves-effect waves-green btn-flat" onClick='chiudiOrdine()'>SI</a>
