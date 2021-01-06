@@ -118,10 +118,6 @@ curl "https://android.googleapis.com/gcm/send/AAAAgzYZK-I:APA91bGyrlD3xJ1jNjNYcY
  --header "Authorization: key=AIzaSyD1JcZ8WM1vTtH6Y0tXq_Pnuw4jgj_92yg"
 
 
-Sending the message from the Server
------------------------------------
-In this section, we cover how to send a push message from the server.
-
 
 
 ---
@@ -156,3 +152,7 @@ Stampa
 ------
 Per la stampa dello scontrino uso una chiamata ad un servizio sulla macchina di sviluppo
 la quale esegue la chiamata PrintJob dello standard IPP
+
+Modifica: la Raspberry fa da printer server, l'app deve puntare all'IP del Raspberry
+
+TODO: stato affidabile, specie per la fine carta.

@@ -11,8 +11,6 @@ var idOrdineSel = 0     // ID ordine selezionato
 function showHome(item)
 {
     console.log('showHome '+item)
-    //document.getElementById('pageContatti').style.display='none';
-    //document.getElementById('pageOrdine').style.display='none';
     document.getElementById('pageHome').style.display='block';
     getMenuItems(item)
 }
@@ -24,9 +22,7 @@ function showHome(item)
 function showContatti()
 {
     console.log('showContatti')
-    //document.getElementById('pageContatti').style.display='block';
     document.getElementById('pageHome').style.display='none';
-    //document.getElementById('pageOrdine').style.display='none';
 }
 
 
@@ -54,7 +50,7 @@ function showOrderDlg(e){
         console.error("dlgItemActions non definito!")
         return
     }
-    // Cerca il dato idx dell'elemento LI parente
+    // Cerca il dato idx dell'elemento LI genitore
     var el = e.srcElement.parentNode
     console.log(el)
     nm = el.nodeName
@@ -137,7 +133,7 @@ function saveOrder(){
 
 
 function _getOrdini() {
-    console.log("[+getOrdini] ")
+    console.error("[+getOrdini] ")
     // Elimina elementi aggiunti precedentemente
     document.querySelectorAll('.itemAdded').forEach( e => e.remove())
 
@@ -271,91 +267,21 @@ function addOrdine(order){
 }
 
 
-/** Stampa IPP
- * RFC8010
-  */
-function doPrintIpp(){
-    var idxOrder = document.querySelector('#dlgIdxOrder').value
-    // var ordine = orders[idxOrder]
-    // L'ordine selezionato è in 'ordine
-    console.log("[print] ", ordine.nome)
-    console.log("[print] ", ordine.objOrdine)
-
-    /* Da comando ippfind ricevo:
-        ipp://GhilbaDebian.local:631/printers/CUSTOM_Engineering_Q3
-    */
-    var printer = 'CUSTOM_Engineering_Q3'
-
-    /*  IPP uses HTTP as its transport protocol. 
-        Each IPP request is a HTTP POST with a binary IPP message and print file, if any, in the request message body. 
-        The corresponding IPP response is returned in the POST response. 
-        HTTP connections can be unencrypted, upgraded to TLS encryption using an HTTP OPTIONS request, or encrypted immediately (HTTPS). 
-        HTTP POST requests can also be authenticated using any of the usual HTTP mechanisms.
-    */
-
-    /* Test con stampa http - da parametrizzare */
-    var ip = "127.0.0.1" // "localhost"
-    var port = 631
-    var text = "Prova di stampa\nProva di stampa"
-    var bText = new TextEncoder().encode(text);
-    console.log("bText: ", bText)
-
-    var reqBody1 = [ 0x01, 0x01,    // IPP version
-        0x00, 0x02,                 // Print-job request
-        0x00, 0x00, 0x00, 0x50,     // Arbitrary request ID
-        0x45, 0x00, 0x0B, 'p','r','i','n','t','e','r','-','u','r','i',
-            0x00, 59, 'i','p','p',':','/','/','l','o','c','a','l','h','o','s','t',':','6','3','1','/','p','r','i','n','t','e','r','s','/','C','U','S','T','O','M','_','E','n','g','i','n','e','e','r','i','n','g','_,','Q','3',
-        0x03                        // end-of-attributes-tag
-    ]                      
-    reqBody1.push(bText)
-
-    console.log("reqBody1: ", reqBody1)
-    
-    var reqBody = new Uint8Array(reqBody1)
-    /* ATTR uri "printer-uri" "ipp://printer.example.com/ipp/print"
-    0x45                           uri type             value-tag
-    0x000b                                              name-length
-    printer-uri                    printer-uri          name
-    0x002c                                              value-length
-    ipp://printer.example.com/ipp/ printer pinetree     value
-    print/pinetree
-
-    Stampa di prova: localhost - - [08/Dec/2020:17:53:52 +0100] "POST /printers/CUSTOM_Engineering_Q3 HTTP/1.1" 200 397 Print-Job successful-ok
-
-    */
-
-    console.log(typeof reqBody)
-    console.log("reqBody: ", reqBody)
-
-    console.log('http://'+ip+':'+port+'/printers/'+printer)
-    fetch('http://'+ip+':'+port+'/printers/'+printer, {
-        method: 'POST',
-        mode: 'no-cors', 
-        headers: {
-            'Content-Type': 'application/ipp'
-          },
-        body: reqBody
-        })
-    .then(response => {
-        console.log(response)
-        M.toast({html: "Stampa eseguita"})
-    })
-    .catch(response => console.error(response))
-}
-
 
 /** 
  * Stampa via printer server sulla stessa sottorete
- * Richiema lo script stampa.php
-  */
+ * Richiama lo script stampa.php
+ * La stampa via IPP poneva un problema CORS
+ */
  function doPrint(){
     var idxOrder = document.querySelector('#dlgIdxOrder').value
-    // L'ordine selezionato è in 'ordine
+
+    // L'ordine selezionato è in 'ordine'
     console.log("[print] ", ordine.nome)
     console.log("[print] ", ordine.objOrdine)
 
     /* Test con stampa http - da parametrizzare */
-    var ip = cfg['ipStampante'] // "192.168.1.124" // "127.0.0.1" // "localhost"
+    var ip = cfg['ipStampante'] // "192.168.1.124"
     var reqBody = {
         nome: ordine.nome,
         ora: ordine.consegnaOra,
@@ -364,10 +290,11 @@ function doPrintIpp(){
 
     console.log("reqBody: ", reqBody)
 
-    console.log('http://'+ip+'/stampa.php')
-    fetch('http://'+ip+':'+'/stampa.php', {
+    var url = 'http://'+ip+'/stampa.php'
+    console.log(url)
+    fetch( url, {
         method: 'POST',
-        mode: 'no-cors', 
+        //mode: 'no-cors', Con questo la risposta è 'opaque'
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -376,25 +303,28 @@ function doPrintIpp(){
     })
     .then(response => {
         console.log(response)
-        if (response.ok)
-            M.toast({html: "Stampa eseguita"})
-        else
-            M.toast({html: "ERRORE di stampa"})
+        if(status=200)
+            return response.json()
+        M.toast({html: "Errore"})
+    })
+    .then(response => {
+        console.log(response)
+        M.toast({html: "Stampa eseguita"})
     })
     .catch(response => {
         console.error(response)
-        M.toast({html: "Errore "+response})
+        M.toast({html: "Err: "+response+" - "+url})
     })
 }
 
 
 /**
- * Chiede conferma
+ * Chiede conferma della chiusura ordine
  */
 function doChiudiOrdine(){
     console.log("Chiudi? ", idOrdineSel)
     dlgSicuro.open();
-    console.log("> Dopo sicuro")
+    console.log("> Dopo open sicuro")
 }
 
 /**
@@ -554,14 +484,17 @@ function saveCfg(){
     localStorage.setItem('ipStampante', tmp)
     cfg['ipStampante'] = tmp;
 
+    tmp = document.querySelector('#cfgPizze').checked
+    localStorage.setItem('rxPizze', tmp)
+    cfg['rxPizze'] = tmp
+
     tmp = document.querySelector('#cfgBevande').checked
-    localStorage.getItem('rxBevande') = tmp
+    localStorage.setItem('rxBevande', tmp)
     cfg['rxBevande'] = tmp
 
     tmp = document.querySelector('#cfgRistorante').checked
-    localStorage.getItem('rxCucina') = tmp
+    localStorage.setItem('rxCucina', tmp)
     cfg['rxCucina'] = tmp
-
 }
 
 function init() {
