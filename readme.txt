@@ -156,3 +156,31 @@ la quale esegue la chiamata PrintJob dello standard IPP
 Modifica: la Raspberry fa da printer server, l'app deve puntare all'IP del Raspberry
 
 TODO: stato affidabile, specie per la fine carta.
+
+
+Note: Fetch supports the Cross Origin Resource Sharing (CORS). Testing generally requires running a local server. 
+Note that although fetch does not require HTTPS, service workers do and so using
+ fetch in a service worker requires HTTPS. Local servers are exempt from this.
+
+
+
+Apache HTTPs
+------------
+
+Chiave privata
+#openssl genrsa -out ca.key 2048
+
+Richiesta certificato
+#openssl req -new -key ca.key -out ca.csr
+
+Certificato firmato
+openssl x509 -req -days 365 -in ca.csr -signkey ca.key -out ca.crt
+
+cp ca.crt /etc/pki/tls/certs
+cp ca.key /etc/pki/tls/private/ca.key
+cp ca.csr /etc/pki/tls/private/ca.csr
+
+#vi /etc/httpd/conf.d/ssl.conf
+................
+SSLCertificateFile /etc/pki/tls/certs/ca.crt
+SSLCertificateKeyFile /etc/pki/tls/private/ca.key

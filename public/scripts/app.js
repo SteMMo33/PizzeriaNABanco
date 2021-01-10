@@ -1,4 +1,4 @@
-var cfg = new Array()
+var cfg = []
 var ordine = new Array();
 var orders = new Array();
 var totaleOrdine = 0
@@ -36,9 +36,9 @@ function showDlgSettings(){
     }
     // Aggiorna i dati in dlg
     document.querySelector('#cfgIpStampante').value = cfg['ipStampante']
-    document.querySelector('#cfgPizze').checked = cfg['rxPizze']==1
-    document.querySelector('#cfgRistorante').checked = cfg['rxCucina']==1
-    document.querySelector('#cfgBevande').checked = cfg['rxBevande']==1
+    document.querySelector('#cfgPizze').checked = cfg['rxPizze']
+    document.querySelector('#cfgRistorante').checked = cfg['rxCucina']
+    document.querySelector('#cfgBevande').checked = cfg['rxBevande']
     // Apre la dlg
     dlgSettings.open()
 }
@@ -290,7 +290,8 @@ function addOrdine(order){
 
     console.log("reqBody: ", reqBody)
 
-    var url = 'http://'+ip+'/stampa.php'
+    // var url = 'https://'+ip+'/stampa.php'
+    var url = 'https://stampa-na.herokuapp.com/'
     console.log(url)
     fetch( url, {
         method: 'POST',
@@ -426,7 +427,7 @@ function sendNotificaPronto(){
         data: {
             notification: {
                 title: 	"Pizzeria Nuova Aurora",
-                body:"Pizza è quasi pronta !! Ti aspettiamo",
+                body:"🍕 Pizza è quasi pronta !! 🍕 Ti aspettiamo",
                 icon: "/images/icons/logo128.png",
                 color: "#ff0000"
             },
