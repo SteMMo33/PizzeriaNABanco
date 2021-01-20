@@ -416,13 +416,14 @@ function sendNotificaProntoV1(){
 
 /* OK Notifica senza autorizzazione */
 function sendNotificaPronto(){
-
+/*
     var jsonOrdine = ordine.ordine
     var arrOrdine = JSON.parse(jsonOrdine)
     var numero = 0
     arrOrdine.forEach( (el, idx) => {
         numero += Number(el.qty)
     })
+*/
     var data = {
         data: {
             notification: {
@@ -463,6 +464,68 @@ function sendNotificaPronto(){
     })
 }
 
+
+/* OK Notifica di ricevuto dal banco */
+function sendNotificaRicevuto(ordine, id){
+
+    //console.log("Ordine id: "+id);
+    //console.log("Token: "+ordine.token);
+
+    var data = {
+        data: {
+            notification: {
+                title: 	"Pizzeria Nuova Aurora",
+                body:"🍕 L'ordine è stato ricevuto! Grazie!\nTi invieremo un'altra notifica quando le pizze saranno pronte .. a dopo!",
+                icon: "/images/icons/logo128.png",
+                color: "#ff0000"
+            },
+        },
+        to: ordine.token
+    }
+    // console.log(data)
+    console.log(JSON.stringify(data))
+
+    fetch( "https://fcm.googleapis.com/fcm/send", 
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": "key=AAAAgzYZK-I:APA91bGyrlD3xJ1jNjNYcYGavCPskow9n7CSw0YtlrbEp84DrUD_XZ96U8dPB0ajD6D3XK352MXsh6Tk1rr0_yx9i3oX_pIz-_vuPleWHll0zjlTQfu-GW1YA4xQ7LhTlZedbv2NPMZd"
+            },
+            body: JSON.stringify(data),
+        }
+    ).then((res) => {
+        console.log(res)
+        if (res.status==200){
+            console.log("> notifica ricevuto inviata")
+            M.toast({html:"Notifica ricevuto inviata"});
+
+            // Aggiorna il flag su DB remoto
+            console.log("Aggiornamento id: "+id)
+            dbOrdini.doc(id).update({
+                notifBanco: true,
+            })
+            .then(
+                 function(){
+                    console.log("[sendNotificaRicevuto] OK")
+                 }
+            )
+            .catch(
+                function(error){
+                    console.error("[sendNotificaRicevuto] ", error)
+                }
+            );        
+        }
+        else if (res.status==401){
+            console.error("> Non autorizzato !")
+            M.toast({html:"Errore: non autorizzato"});
+        }
+        else {
+            console.error("> Error: "+res.status)
+            M.toast({html:"Errore: "+res.status});
+        }
+    })
+}
 
 
 function getSettings() {
@@ -520,11 +583,17 @@ function getOrdini() {
         function(snapshot){
             snapshot.docChanges().forEach(
                 function(change){
-                    console.log("!! changes: ", change)
+                    console.log("> changes: ", change)
                     // console.log("!! data: ",change.doc)
                     if (change.type=='added'){
                         addOrdine(change.doc)
                         found = true
+
+                        // Verifica se inviare la notifica ricevuto
+                        var data = change.doc.data()
+                        if (!data.notifBanco){
+                            sendNotificaRicevuto(data, change.doc.id);
+                        }
                     }
                     else if (change.type=='modified'){
                         console.log("! modified - ToDo")
