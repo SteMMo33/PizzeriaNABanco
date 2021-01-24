@@ -4,6 +4,7 @@ var orders = new Array();
 var totaleOrdine = 0
 var nOrdini = 0
 var idOrdineSel = 0     // ID ordine selezionato
+var bearer              // autenticazione per notifiche
 
 /*
     Mosta la pagina principale
@@ -394,7 +395,7 @@ function sendNotificaProntoV1(){
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": "Bearer AAAAgzYZK-I:APA91bGyrlD3xJ1jNjNYcYGavCPskow9n7CSw0YtlrbEp84DrUD_XZ96U8dPB0ajD6D3XK352MXsh6Tk1rr0_yx9i3oX_pIz-_vuPleWHll0zjlTQfu-GW1YA4xQ7LhTlZedbv2NPMZd"
+                "Authorization": "Bearer "+bearer  
             },
             body: JSON.stringify(data),
         }
@@ -445,7 +446,7 @@ function sendNotificaPronto(){
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": "key=AAAAgzYZK-I:APA91bGyrlD3xJ1jNjNYcYGavCPskow9n7CSw0YtlrbEp84DrUD_XZ96U8dPB0ajD6D3XK352MXsh6Tk1rr0_yx9i3oX_pIz-_vuPleWHll0zjlTQfu-GW1YA4xQ7LhTlZedbv2NPMZd"
+                "Authorization": "key="+bearer
             },
             body: JSON.stringify(data),
         }
@@ -492,7 +493,7 @@ function sendNotificaRicevuto(ordine, id){
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": "key=AAAAgzYZK-I:APA91bGyrlD3xJ1jNjNYcYGavCPskow9n7CSw0YtlrbEp84DrUD_XZ96U8dPB0ajD6D3XK352MXsh6Tk1rr0_yx9i3oX_pIz-_vuPleWHll0zjlTQfu-GW1YA4xQ7LhTlZedbv2NPMZd"
+                "Authorization": "key="+bearer
             },
             body: JSON.stringify(data),
         }
@@ -575,6 +576,18 @@ function init() {
 function getOrdini() {
     // getOrdini("non")
     var found = false
+
+    // Lettura settings
+    var resRef = firebase.firestore().collection("settings").doc("set").get().then(
+        (doc) => {console.log("WWWW")
+            if (doc.exists) {
+                var data = doc.data();
+                bearer = data['Bearer']
+                console.log("B: "+bearer)
+            }
+        }
+    )
+
 
     // Lettura e sincronizzazione con collection 'ordini'
     var now = new Date()
