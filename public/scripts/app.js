@@ -350,6 +350,8 @@ function chiudiOrdine(){
             // Tolgo il record in memoria
             delete orders[id]
             --nOrdini
+            if (nOrdini==0)
+                document.querySelector('#menuTitle').textContent = "Nessun ordine"
 
             M.toast({html: "Ordine chiuso correttamente"})
             setTimeout( function(){dlgItemActions.close()}, 2000);
@@ -498,10 +500,11 @@ function sendNotificaRicevuto(ordine, id){
         console.log(res)
         if (res.status==200){
             console.log("> notifica ricevuto inviata")
-            M.toast({html:"Notifica ricevuto inviata"});
+            M.toast({html:"Notifica ordine ricevuto inviata"});
 
             // Aggiorna il flag su DB remoto
             console.log("Aggiornamento id: "+id)
+            var dbOrdini = firebase.firestore().collection("ordini")
             dbOrdini.doc(id).update({
                 notifBanco: true,
             })
