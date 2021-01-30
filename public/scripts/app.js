@@ -9,11 +9,10 @@ var bearer              // autenticazione per notifiche
 /*
     Mosta la pagina principale
 */
-function showHome(item)
+function showHome()
 {
-    console.log('showHome '+item)
+    console.log('showHome ')
     document.getElementById('pageHome').style.display='block';
-    getMenuItems(item)
 }
 
 
@@ -53,7 +52,6 @@ function showOrderDlg(e){
     }
     // Cerca il dato idx dell'elemento LI genitore
     var el = e.srcElement.parentNode
-    console.log(el)
     nm = el.nodeName
     while(nm != 'LI'){
         el = el.parentElement
@@ -218,7 +216,7 @@ function _getOrdini() {
 function addOrdine(order){
 
     var orderData = order.data();
-    console.log(orderData)
+    console.log("[addOrdine] ",orderData)
 
     // Inserisce in lista orders con chiave id
     orders[order.id] = orderData
@@ -232,12 +230,10 @@ function addOrdine(order){
 
     // console.log("json: ",jsonOrder)
     var objOrdine = JSON.parse(jsonOrder)
-    // orders[objOrdine] = objOrdine
     objOrdine.ordine.forEach(
 
-        function(elemento){     // Per ogni elemento dell'ordine
+        function(elemento){     // Per ogni elemento dell'ordine arrivato
             //console.log("elemento: ", elemento)
-            //console.log(firebase.firestore.FieldPath.documentId())
 
             if (typeof elemento.tipo === 'undefined')
                 return
@@ -249,14 +245,32 @@ function addOrdine(order){
                 var newEl = document.querySelector('#template').cloneNode(true);
                 newEl.classList.add('itemAdded')
                 newEl.setAttribute('idx', order.id)
+                newEl.setAttribute('h', orderData.consegnaOra)
                 newEl.onclick = showOrderDlg
                 // newEl.querySelector('#templateRow').textContent = nOrdini
                 newEl.querySelector('#templateTitle').textContent = elemento.qty + " x " + elemento.nome
                 newEl.querySelector('#templateNome').textContent = orderData.nome
                 newEl.querySelector('#templateOra').innerHTML = orderData.consegnaOra
-
                 newEl.style.display='block'
-                document.querySelector('#mainList').appendChild(newEl);
+
+                var added = false
+                var list = document.querySelectorAll('.itemAdded')
+                if (list.length > 1){
+                    var index = 0
+                    while( index < list.length){
+                        var item = list[index]
+                        if (orderData.consegnaOra < item.getAttribute("h")){
+                            item.insertAdjacentElement('beforebegin',newEl)
+                            added = true
+                            break
+                        }
+                        ++index
+                    }
+                }
+                else 
+                    document.querySelector('#mainList').appendChild(newEl);
+
+                if(added==false)    document.querySelector('#mainList').appendChild(newEl);
 
                 // var n = Number(elemento.qty)
                 // if (!isNaN(n)) nElementi += n
@@ -275,10 +289,8 @@ function addOrdine(order){
  * La stampa via IPP poneva un problema CORS
  */
  function doPrint(){
-    var idxOrder = document.querySelector('#dlgIdxOrder').value
 
     // L'ordine selezionato è in 'ordine'
-    console.log("[print] ", ordine.nome)
     console.log("[print] ", ordine.objOrdine)
 
     /* Test con stampa http - da parametrizzare */
@@ -286,14 +298,13 @@ function addOrdine(order){
     var reqBody = {
         nome: ordine.nome,
         ora: ordine.consegnaOra,
-        ordine: ordine.objOrdine
+        ordine: ordine.objOrdine,
+        printer: ip
     }
 
     console.log("reqBody: ", reqBody)
 
-    // var url = 'https://'+ip+'/stampa.php'
     var url = 'https://stampa-na.herokuapp.com/'
-    console.log(url)
     fetch( url, {
         method: 'POST',
         //mode: 'no-cors', Con questo la risposta è 'opaque'
@@ -304,14 +315,23 @@ function addOrdine(order){
         body: JSON.stringify(reqBody)
     })
     .then(response => {
-        console.log(response)
-        if(status=200)
-            return response.json()
-        M.toast({html: "Errore"})
-    })
-    .then(response => {
-        console.log(response)
-        M.toast({html: "Stampa eseguita"})
+        console.log("[doPrint1] ",response)
+        if(response.status==200){
+            // return response.json()
+            response.json().then( (r) => {
+                    console.log("[doPrint2] ",r);
+                M.toast({html: "Stampa eseguita"})
+        
+                // Rende visibile l'icona stampato
+                document.querySelectorAll("li[idx='"+idOrdineSel+"'] #templatePrint").forEach( 
+                    (x) => { x.style.display = "block" }
+                )
+                // Torna alla home
+                setTimeout( () => dlgItemActions.close(), 1500 )
+            })
+        }
+        else
+            M.toast({html: "Errore"})
     })
     .catch(response => {
         console.error(response)
@@ -548,6 +568,8 @@ function getSettings() {
 
 
 function saveCfg(){
+    console.log("[saveCfg]")
+
     let tmp = document.querySelector('#cfgIpStampante').value
     localStorage.setItem('ipStampante', tmp)
     cfg['ipStampante'] = tmp;
@@ -574,16 +596,15 @@ function init() {
 
 
 function getOrdini() {
-    // getOrdini("non")
     var found = false
 
     // Lettura settings
     var resRef = firebase.firestore().collection("settings").doc("set").get().then(
-        (doc) => {console.log("WWWW")
+        (doc) => {
             if (doc.exists) {
                 var data = doc.data();
                 bearer = data['Bearer']
-                console.log("B: "+bearer)
+                // console.log("B: "+bearer)
             }
         }
     )

@@ -43,7 +43,7 @@
     <div class="pusha-panel pusha-panel--left" aria-hidden="true">
       <div class="pusha-panel__content">
         <img src='/images/logo300.jpg' style='width: 180px; margin: 15px auto;display:block;'>
-        <div id='versione'>Versione: 0.3.4</div>
+        <div id='versione'>Versione: 0.3.5</div>
         <ul class="menu__list">
           <li><a onclick="panel.close();"><i class="material-icons">local_pizza</i> Vedi solo oggi - TODO</a></li>
           <li><a onclick="panel.close();"><i class="material-icons">local_pizza</i> Vedi tutti ordini - TODO</a></li>
@@ -76,22 +76,20 @@
             <i id='menuIcon' class="material-icons"></i>
             <span id='menuTitle' style='text-align: center;font-weight: 700;'>In attesa di dati ..</span>
           </li>
-          
-          <li class="collection-item pink yellow-text" id='templateMenu' style="display:none;">
-            <div id='submenuTitle'>{{menu.title}}</div>
-          </li>
 
           <!-- Template -->
           <li class="collection-item" id="template" style="display:none">
             <div>
               <table><tbody>
                 <tr style='border:none'>
-                  <td class="secondary-content" id='templateRow' 
-                    style='width: 10px; text-align:center; font-weight: 800;font: size 1.2em; float:none'>
+                  <td class="secondary-content" id='templateRow' style='width: 6px; float:none'>
                   </td>
                 <td>
                   <div id='templateTitle' style='font-weight: 700;'></div>
                   <div id='templateNome' style='color: gray'>?</div>
+                </td>
+                <td class="secondary-content" id='templatePrint' style='text-align:right; font-weight:700; float:none; display: none'>
+                  <i id='iconPrint' class="small material-icons">print</i>
                 </td>
                 <td class="secondary-content" id='templateOra' 
                   style='width: 72px; text-align: right; font-weight: 800;font-size:1.3em; float:none'>
