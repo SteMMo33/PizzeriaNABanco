@@ -90,49 +90,9 @@ function showOrderDlg(e){
 
 
 
-/*
-function saveOrder(){
-    console.log('[saveOrder]', ordine)
-
-    // Controllo nome
-    var nome = document.querySelector("#orderName").value;
-    if(nome==""){
-        M.toast({html:"Il nome è obbligatorio"});
-        return;
-    }
-    ordine['nome']=nome
-
-    var dbOrdini = firebase.firestore().collection("ordini")
-    var id = Date.now().toString(); // dbOrdini.createId();
-
-    // Scrittura record
-    dbOrdini.doc(id).set({
-        ordine: JSON.stringify(ordine), // "Ordine",
-        nome: nome,
-		data: firebase.firestore.FieldValue.serverTimestamp(),
-        servito: false,
-        totale: totaleOrdine
-      })
-      .then(
-         function(){
-            console.log("[saveOrder] OK")
-            M.toast({html: "Ordine inviato correttamente"})
-            // setTimeout( function(){ResetOrder(); showHome('pizze')}, 4000);
-         }
-      )
-      .catch(
-        function(error){
-            console.error("[saveOrder] ", error)
-        }
-    );
-  console.log('[saveOrder]')
-}
-*/
-
-
 
 function _getOrdini() {
-    console.error("[+getOrdini] ")
+    console.error("[+getOrdini] TOGLIERE")
     // Elimina elementi aggiunti precedentemente
     document.querySelectorAll('.itemAdded').forEach( e => e.remove())
 
@@ -145,62 +105,7 @@ function _getOrdini() {
         resRef.get().then( /*async*/ (orderList) => {
 
             // console.log("orderList: ", orderList    // Nulla di leggibile
-
             orderList.forEach( addOrder)
-            /*
-                function(order){
-                    // console.log("id: "+order.id)
-
-                    var orderData = order.data();
-                    console.log(orderData)
-                    // console.log("servito: "+orderData.servito)
-
-                    // Inserisce in lista con chiave id
-                    orders[order.id]= orderData
-                    ++nOrdini
-
-                    var jsonOrder = orderData.ordine
-                    if(typeof jsonOrder=='undefined')
-                        jsonOrder = "{\"ordine\":[{\"nome\":\"Problema nei dati\",\"qty\":\"-\"}]}"
-                    if(jsonOrder.startsWith("["))
-                        jsonOrder = "{\"ordine\":"+jsonOrder+"}"
-
-                    // console.log("json: ",jsonOrder)
-                    var objOrdine = JSON.parse(jsonOrder)
-                    objOrdine.ordine.forEach(
-        
-                        function(elemento){     // Per ogni elemento dell'ordine
-                            console.log("elemento: ", elemento)
-                            //console.log(firebase.firestore.FieldPath.documentId())
-
-                            if (typeof elemento.tipo === 'undefined')
-                                return
-
-                            // Se l'elemento è una pizza lo inserisce in lista
-                            if (elemento.tipo === 'pizze' || elemento.tipo === 'speciali'){
-
-                                // Duplica l'elemento 'template'
-                                var newEl = document.querySelector('#template').cloneNode(true);
-                                newEl.classList.add('itemAdded')
-                                newEl.setAttribute('idx', order.id)
-                                newEl.onclick = showOrderDlg
-                                newEl.querySelector('#templateRow').textContent = nOrdini
-                                newEl.querySelector('#templateTitle').textContent = elemento.qty + " x " + elemento.nome
-                            // var d = orderData.data.toDate().toLocaleString()
-                            // newEl.querySelector('#templateDesc').textContent = orderData.nome + " - " + d
-                                newEl.querySelector('#templatePrice').innerHTML = orderData.consegnaOra
-
-                                newEl.style.display='block'
-                                document.querySelector('#mainList').appendChild(newEl);
-
-                                var n = Number(elemento.qty)
-                                if (!isNaN(n)) nElementi += n
-                            }
-                        }
-                    )
-                }
-            ) */
-
             document.querySelector('#menuTitle').textContent = "Ordini: "+nOrdini
         })
     } catch (e) {
@@ -250,6 +155,11 @@ function addOrdine(order){
                 // newEl.querySelector('#templateRow').textContent = nOrdini
                 newEl.querySelector('#templateTitle').textContent = elemento.qty + " x " + elemento.nome
                 newEl.querySelector('#templateNome').textContent = orderData.nome
+                if (elemento.modifiche){
+                    var el = newEl.querySelector('#templateModif')
+                    el.textContent = elemento.modifiche
+                    el.style.display = 'block'
+                }
                 newEl.querySelector('#templateOra').innerHTML = orderData.consegnaOra
                 newEl.style.display='block'
 
@@ -284,17 +194,15 @@ function addOrdine(order){
 
 
 /** 
- * Stampa via printer server sulla stessa sottorete
- * Richiama lo script stampa.php
- * La stampa via IPP poneva un problema CORS
+ * Stampa via scipt server remoto https
  */
  function doPrint(){
 
     // L'ordine selezionato è in 'ordine'
     console.log("[print] ", ordine.objOrdine)
 
-    /* Test con stampa http - da parametrizzare */
-    var ip = cfg['ipStampante'] // "192.168.1.124"
+    /* Stampa https  */
+    var ip = cfg['ipStampante']
     var reqBody = {
         nome: ordine.nome,
         ora: ordine.consegnaOra,
