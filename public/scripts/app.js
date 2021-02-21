@@ -135,34 +135,49 @@ function addOrdine(order){
 
     // console.log("json: ",jsonOrder)
     var objOrdine = JSON.parse(jsonOrder)
+
+
+    // Duplica l'elemento 'template'
+    var newEl = document.querySelector('#template').cloneNode(true);
+    newEl.classList.add('itemAdded')
+    newEl.setAttribute('idx', order.id)
+    newEl.setAttribute('h', orderData.consegnaOra)
+    newEl.onclick = showOrderDlg
+    newEl.querySelector('#templateNome').textContent = orderData.nome    
+
     objOrdine.ordine.forEach(
 
-        function(elemento){     // Per ogni elemento dell'ordine arrivato
-            //console.log("elemento: ", elemento)
+        function(elemento, idx){     // Per ogni elemento dell'ordine arrivato
+            // console.log("elemento: ", elemento, " - idx: ",idx)
 
-            if (typeof elemento.tipo === 'undefined')
-                return
+            if (typeof elemento.tipo === 'undefined') return
 
             // Se l'elemento è una pizza lo inserisce in lista
             if (elemento.tipo === 'pizze' || elemento.tipo === 'speciali'){
 
-                // Duplica l'elemento 'template'
-                var newEl = document.querySelector('#template').cloneNode(true);
-                newEl.classList.add('itemAdded')
-                newEl.setAttribute('idx', order.id)
-                newEl.setAttribute('h', orderData.consegnaOra)
-                newEl.onclick = showOrderDlg
-                // newEl.querySelector('#templateRow').textContent = nOrdini
-                newEl.querySelector('#templateTitle').textContent = elemento.qty + " x " + elemento.nome
-                newEl.querySelector('#templateNome').textContent = orderData.nome
-                if (elemento.modifiche){
-                    var el = newEl.querySelector('#templateModif')
-                    el.textContent = elemento.modifiche
-                    el.style.display = 'block'
-                }
-                newEl.querySelector('#templateOra').innerHTML = orderData.consegnaOra
-                newEl.style.display='block'
+                var tdOrdine = newEl.querySelector('#tdOrdine')
 
+                var elNome
+                if (idx==0){    // E' il primo elemento
+                    elNome = newEl.querySelector('#templateTitle')
+                }
+                else {
+                    elNome = newEl.querySelector('#templateTitle').cloneNode(true)
+                    tdOrdine.appendChild(elNome);
+                }
+                elNome.textContent = elemento.qty + " x " + elemento.nome
+
+                if (elemento.modifiche){
+                    var elModif
+                    if (idx==0) elModif = newEl.querySelector('#templateModif')
+                    else elModif = newEl.querySelector('#templateModif').cloneNode(true)
+                    elModif.textContent = elemento.modifiche
+                    elModif.style.display = 'block'
+                    tdOrdine.appendChild(elModif);
+                }
+
+                // Ordinamento - da rivedere
+                /*
                 var added = false
                 var list = document.querySelectorAll('.itemAdded')
                 if (list.length > 1){
@@ -181,13 +196,16 @@ function addOrdine(order){
                     document.querySelector('#mainList').appendChild(newEl);
 
                 if(added==false)    document.querySelector('#mainList').appendChild(newEl);
-
-                // var n = Number(elemento.qty)
-                // if (!isNaN(n)) nElementi += n
+                */
             }
             else console.log("Tipo non previsto: ", elemento.tipo)
         }
     )
+    
+    newEl.querySelector('#templateOra').innerHTML = orderData.consegnaOra
+    newEl.style.display='block'
+
+    document.querySelector('#mainList').appendChild(newEl);
     document.querySelector('#menuTitle').textContent = "Ordini da evadere OGGI"
 }
 
