@@ -34,7 +34,7 @@
   <div class="pusha-wrapper" style='color: #fff; top: -58px;
   font-size: 20px;  -ms-flex-item-align: center;  -ms-grid-row-align: center;
   align-self: center; margin-left: 55px;'>
-    <p>BANCO Nuova Aurora
+    <p>Banco Nuova Aurora
       <i class="small material-icons right" onclick="showDlgSettings()" style='margin-right: 5px;'>settings</i>
     </p>
   </div>
@@ -43,11 +43,11 @@
     <div class="pusha-panel pusha-panel--left" aria-hidden="true">
       <div class="pusha-panel__content">
         <img src='/images/logo300.jpg' style='width: 180px; margin: 15px auto;display:block;'>
-        <div id='versione'>Versione: 0.3.5</div>
+        <div id='versione'>Versione: 0.3.6</div>
         <ul class="menu__list">
-          <li><a onclick="panel.close();"><i class="material-icons">local_pizza</i> Vedi solo oggi - TODO</a></li>
-          <li><a onclick="panel.close();"><i class="material-icons">local_pizza</i> Vedi tutti ordini - TODO</a></li>
-          <li><a onclick="showContatti();panel.close();"><i class="material-icons">group</i> Contatti</a></li>
+          <li><a onclick="panel.close();showHome();"><i class="material-icons">local_pizza</i> Vedi ordini di oggi</a></li>
+          <li><a onclick="panel.close();showHome();"><i class="material-icons">local_pizza</i> Vedi tutti ordini - TODO</a></li>
+          <!-- <li><a onclick="showContatti();panel.close();"><i class="material-icons">group</i> Contatti</a></li> -->
           <!-- <li><a onclick="subscribeUser();panel.close();"><i class="material-icons">group</i> Subscribe</a></li> -->
         </ul>
       </div>
@@ -85,7 +85,7 @@
                   <td class="secondary-content" id='templateRow' style='width: 6px; float:none'>
                   </td>
                 <td id='tdOrdine'>
-                  <div id='templateNome' style='color: gray; text-align: center;'>?</div>
+                  <div id='templateNome' style='color: blue;font-weight: 700;text-align: center;'>?</div>
                   <div id='templateTitle' style='font-weight: 700;'></div>
                   <div id='templateModif' style='color: orange; display: none'>?</div>
                 </td>
@@ -109,7 +109,7 @@
 <!-- Modal Dlg Structure -->
 <div id="dlgItemActions" class="modal">
   <div class="modal-content">
-    <div style='text-align: center; font-size: 24px;'>ORDINE</div>
+    <div style='text-align: center; font-size: 24px;'>GESTIONE ORDINE</div>
     <h6 id='txtDlgNome1' style='color:blue; font-weight: 600;text-align: center;''><span id='txtDlgNome'>Nome</span></h6>
     <h6 id='txtDlgOrdine' style='color:red'>Ordine</h6>
 
@@ -130,6 +130,8 @@
       </a>
 
     </p>
+
+    <p id='msg'></p>
 
   </div>
   <div class="modal-footer">

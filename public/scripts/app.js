@@ -69,6 +69,7 @@ function showOrderDlg(e){
     document.querySelector('#dlgIdxOrder').value = idOrdineSel
     document.querySelector('#txtDlgNome').textContent = ordine.nome
     document.querySelector('#btnNotifica').style.display = ordine.token ? "block" : "none"
+    document.querySelector('#msg').textContent = ""
 
     var txtOrdine = ""
     console.log(ordine.ordine)
@@ -216,6 +217,8 @@ function addOrdine(order){
  */
  function doPrint(){
 
+    document.querySelector('#msg').textContent = "..."
+
     // L'ordine selezionato è in 'ordine'
     console.log("[print] ", ordine.objOrdine)
 
@@ -245,8 +248,9 @@ function addOrdine(order){
         if(response.status==200){
             // return response.json()
             response.json().then( (r) => {
-                    console.log("[doPrint2] ",r);
+                console.log("[doPrint2] ",r);
                 M.toast({html: "Stampa eseguita"})
+                document.querySelector('#msg').textContent = "Stampa eseguita"
         
                 // Rende visibile l'icona stampato
                 document.querySelectorAll("li[idx='"+idOrdineSel+"'] #templatePrint").forEach( 
@@ -260,9 +264,11 @@ function addOrdine(order){
             M.toast({html: "Errore"})
     })
     .catch(response => {
-        console.error(response)
-        M.toast({html: "Err: "+response+" - "+url})
+        console.error("Errore doPrint: "+response)
+        M.toast({html: response+" - "+url})
+        document.querySelector('#msg').textContent = response
     })
+    console.log("[doPrint] end")
 }
 
 
@@ -322,7 +328,7 @@ function chiudiOrdine(){
       "name":"projects/myproject-b5ae1/messages/0:1500415314455276%31bd1c9631bd1c96"
     }
 
- */
+ *
 function sendNotificaProntoV1(){
     var data = {
         message: {
@@ -352,8 +358,8 @@ function sendNotificaProntoV1(){
             M.toast({html:"Notifica inviata !"});
         }
         else if (res.status==401){
-            console.error("> Non autorizzato !")
-            M.toast({html:"Err: non autorizzato"});
+            console.error("> FCM Non autorizzato !")
+            M.toast({html:"Err: FCM non autorizzato"});
         }
         else {
             console.error("> Error: "+res.status)
@@ -361,6 +367,7 @@ function sendNotificaProntoV1(){
         }
     })
 }
+*/
 
 
 /* OK Notifica senza autorizzazione */
@@ -401,6 +408,7 @@ function sendNotificaPronto(){
         if (res.status==200){
             console.log("> notifica inviata !")
             M.toast({html:"Notifica inviata !"});
+            document.querySelector('#msg').textContent = "Notifica inviata"
         }
         else if (res.status==401){
             console.error("> Non autorizzato !")
@@ -414,7 +422,7 @@ function sendNotificaPronto(){
 }
 
 
-/* OK Notifica di ricevuto dal banco */
+/* OK Notifica di ricevuto dal banco al cliente */
 function sendNotificaRicevuto(ordine, id){
 
     //console.log("Ordine id: "+id);
@@ -432,7 +440,8 @@ function sendNotificaRicevuto(ordine, id){
         to: ordine.token
     }
     // console.log(data)
-    console.log(JSON.stringify(data))
+    console.log("[sendNotificaRicevuto] "+JSON.stringify(data))
+    console.log("[sendNotificaRicevuto] bearer: "+bearer)
 
     fetch( "https://fcm.googleapis.com/fcm/send", 
         {
@@ -444,7 +453,7 @@ function sendNotificaRicevuto(ordine, id){
             body: JSON.stringify(data),
         }
     ).then((res) => {
-        console.log(res)
+        console.log("[fcm] ",res)
         if (res.status==200){
             console.log("> notifica ricevuto inviata")
             M.toast({html:"Notifica ordine ricevuto inviata"});
@@ -467,8 +476,8 @@ function sendNotificaRicevuto(ordine, id){
             );        
         }
         else if (res.status==401){
-            console.error("> Non autorizzato !")
-            M.toast({html:"Errore: non autorizzato"});
+            console.error("SendNotificaRicevuto> Non autorizzato !")
+            M.toast({html:"Notifica ordine ricevuto: fcm non autorizzato"});
         }
         else {
             console.error("> Error: "+res.status)
@@ -478,7 +487,7 @@ function sendNotificaRicevuto(ordine, id){
 }
 
 
-function getSettings() {
+function getLocalSettings() {
     let tmp = localStorage.getItem('ipStampante');
     cfg['ipStampante'] = tmp ? tmp : "192.168.1.65"
 
@@ -513,28 +522,31 @@ function saveCfg(){
     cfg['rxCucina'] = tmp
 }
 
-function init() {
+
+async function init() {
     console.log('init')
 
-    getSettings()
+    getLocalSettings()
+    await getRemoteSettings()
     getOrdini()
+}
+
+
+
+async function getRemoteSettings() {
+    // Lettura settings in DB - sincrona per l' attesa del bearer
+    var doc = await firebase.firestore().collection("settings").doc("set").get()
+    console.log("[getRemoteSettings] settings: doc: ", doc)
+    if (doc.exists) {
+        var data = doc.data();
+        bearer = data['Bearer']
+        console.log("[getRemoteSettings] Bearer: "+bearer)
+    }
 }
 
 
 function getOrdini() {
     var found = false
-
-    // Lettura settings
-    var resRef = firebase.firestore().collection("settings").doc("set").get().then(
-        (doc) => {
-            if (doc.exists) {
-                var data = doc.data();
-                bearer = data['Bearer']
-                // console.log("B: "+bearer)
-            }
-        }
-    )
-
 
     // Lettura e sincronizzazione con collection 'ordini'
     var now = new Date()
